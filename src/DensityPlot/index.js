@@ -15,17 +15,37 @@ function Density(props) {
         let stage_2 = []
         let stage_3 = []
 
-        data.map(data => {
-            if(data.Stage == "1"){
-                stage_1.push(parseInt(data[col], 10))
-            }
-            else if(data.Stage == "2"){
-                stage_2.push(parseInt(data[col], 10))
-            }
-            else if(data.Stage == "3"){
-                stage_3.push(parseInt(data[col], 10))
+        data.map((data,index) => {
+            if(index < 100000) {
+                if(data.Stage == "1"){
+                    stage_1.push(parseInt(data[col], 10))
+                }
+                else if(data.Stage == "2"){
+                    stage_2.push(parseInt(data[col], 10))
+                }
+                else if(data.Stage == "3"){
+                    stage_3.push(parseInt(data[col], 10))
+                }
             }
         })
+
+        stage_1.forEach((element, index) => {
+            if (element === null || element === undefined || typeof element === "boolean") {
+              console.log(`Element at index ${index} is ${element}`);
+            }
+        })
+        
+        stage_2.forEach((element, index) => {
+            if (element === null || element === undefined || typeof element === "boolean") {
+                console.log(`Element at index ${index} is ${element}`);
+            }
+        })
+
+        stage_3.forEach((element, index) => {
+                if (element === null || element === undefined || typeof element === "boolean") {
+                    console.log(`Element at index ${index} is ${element}`);
+                }
+            })
 
         let maxNumberDataset = [...stage_1,...stage_2,...stage_3]
         let maxNumber = Math.ceil(Math.max(...maxNumberDataset));

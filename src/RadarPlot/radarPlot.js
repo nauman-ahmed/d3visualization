@@ -4,9 +4,8 @@ import "./radar.css"
 import { svg } from "d3";
 
 function RadarPlot(props) {
-
+    
     const createPlot = (dataset, id) => {
-        console.log("DATASET",dataset)
         const dataSets = dataset
 
         // Find the max value for each axis to normalize data accordingly
@@ -112,20 +111,21 @@ function RadarPlot(props) {
                 // Tick labels (optional)
                 if (j > 1) { // Skip the center label
 
-                    axis.append("line")
-                    .attr("x1", x)
-                    .attr("y1", y)
-                    .attr("x2", x + 5 * Math.cos(angleSlice * i - Math.PI/2 + Math.PI / 2))
-                    .attr("y2", y + 5 * Math.sin(angleSlice * i - Math.PI/2 + Math.PI / 2))
-                    .style("stroke", "black")
-                    .style("stroke-width", "2px");
+                    // axis.append("line")
+                    // .attr("x1", x)
+                    // .attr("y1", y)
+                    // .attr("x2", x + 5 * Math.cos(angleSlice * i - Math.PI/2 + Math.PI / 2))
+                    // .attr("y2", y + 5 * Math.sin(angleSlice * i - Math.PI/2 + Math.PI / 2))
+                    // .style("stroke", "black")
+                    // .style("stroke-width", "2px");
                     // Tick marks
                     axis.append("text")
                     .attr("x", x + 10 * Math.cos(angleSlice * i - Math.PI/2 + Math.PI / 2))
                     .attr("y", y + 10 * Math.sin(angleSlice * i - Math.PI/2 + Math.PI / 2))
-                    .text(tickValue.toFixed(2)) // Control decimal places as needed
-                    .attr("text-anchor", "top")
-                    .style("font-size", "10px");
+                    .text(tickValue.toFixed(1)) // Control decimal places as needed
+                    // .text(tickText) // Control decimal places as needed
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "8px");
                 }
             }
         });
