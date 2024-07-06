@@ -179,16 +179,15 @@ function RadarPlot(props) {
             .enter().append("g")
             .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Vertical alignment of legend items
 
-        legend.append("rect")
-            .attr("x", width)
-            .attr("y", 0)
-            .attr("width", 18)
-            .attr("height", 18)
+        legend.append("circle")
+            .attr("cx", width + 10)
+            .attr("cy", 0)
+            .attr("r", 6)
             .style("fill", (d, i) => colors[i]);
 
         legend.append("text")
-            .attr("x", width + 30)
-            .attr("y", 9)
+            .attr("x", width + 20)
+            .attr("y", 0)
             .attr("dy", ".35em")
             .text(d => d)
             .style("font-size", "12px")

@@ -16,7 +16,7 @@ function Density(props) {
         let stage_3 = []
 
         data.map((data,index) => {
-            if(index < 100000) {
+            if(index < 100) {
                 if(data.Stage == "1"){
                     stage_1.push(parseInt(data[col], 10))
                 }

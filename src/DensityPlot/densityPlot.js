@@ -21,26 +21,37 @@ function DensityPlot(props) {
     }
 
     const createPlot = (dataset, id) => {
-        const width = 500, height = 300, margin = { top: 10, right: 30, bottom: 30, left: 50 };
+        const width = 500, height = 300, margin = { top: 50, right: 100, bottom: 30, left: 50 };
 
         const datasets = dataset.datasets;
-        const colors = ["#69b3a2", "#404080", "#ff6600"];
-
+        const colors = ["#1f77b4", "#ff7f0e", "#2ca02c"];
+        console.log("DATASET",dataset.datasets)
         const svg = d3.select(id).append("svg")
             .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+            .attr("height", height);
+
+        // Create a clip path to prevent elements from overflowing
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width - margin.left - margin.right)
+            .attr("height", height - margin.top - margin.bottom)
+            .attr("x", 0)
+            .attr("y", 0);
+
+        const chartArea = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`)
+            .attr("clip-path", "url(#clip)");
 
         const x = d3.scaleLinear()
             .domain([0, dataset.maxNumber])  // Adjust domain to accommodate all data
             .range([0, width - margin.left - margin.right]);
 
-        const xAxis = svg.append("g")
-            .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+        const xAxisGroup = svg.append("g")
+            .attr("transform", `translate(${margin.left},${height - margin.bottom})`)
             .call(d3.axisBottom(x));
 
-        const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(10));
+        const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
         const allDensity = datasets.map((data, i) => ({
             density: kde(data.map(d => d)),
             color: colors[i]
@@ -50,7 +61,8 @@ function DensityPlot(props) {
             .domain([0, d3.max(allDensity.map(d => d3.max(d.density, d => d[1])))])
             .range([height - margin.top - margin.bottom, 0]);
 
-        const yAxis = svg.append("g")
+        const yAxisGroup = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`)
             .call(d3.axisLeft(y));
 
         const line = d3.line()
@@ -58,7 +70,7 @@ function DensityPlot(props) {
             .x(d => x(d[0]))
             .y(d => y(d[1]));
 
-        const paths = svg.selectAll("path")
+        const paths = chartArea.selectAll("path")
             .data(allDensity)
             .enter().append("path")
             .attr("fill", d => d.color)
@@ -68,23 +80,23 @@ function DensityPlot(props) {
             .attr("stroke-linejoin", "round")
             .attr("d", d => line(d.density));
 
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", 10)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .style("font-family", "Arial, sans-serif")
-            .style("font-weight", "bold")
-            .style("fill", "black")
-            .text(dataset.col_name);
+        // svg.append("text")
+        //     .attr("x", width / 2)
+        //     .attr("y", margin.top )
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", "16px")
+        //     .style("font-family", "Arial, sans-serif")
+        //     .style("font-weight", "bold")
+        //     .style("fill", "black")
+        //     .text(dataset.col_name);
 
         // Handmade legend
-        svg.append("circle").attr("cx", width - 75).attr("cy", 10).attr("r", 6).style("fill", "#69b3a2");
-        svg.append("circle").attr("cx", width - 75).attr("cy", 30).attr("r", 6).style("fill", "#404080");
-        svg.append("circle").attr("cx", width - 75).attr("cy", 50).attr("r", 6).style("fill", "#ff6600");
-        svg.append("text").attr("x", width - 100).attr("y", 10).text("Stage 1").style("font-size", "15px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", width - 100).attr("y", 30).text("Stage 2").style("font-size", "15px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", width - 100).attr("y", 50).text("Stage 3").style("font-size", "15px").attr("alignment-baseline", "middle");
+        svg.append("circle").attr("cx", 40).attr("cy", 10).attr("r", 6).style("fill", "#1f77b4");
+        svg.append("circle").attr("cx", 110).attr("cy", 10).attr("r", 6).style("fill", "#ff7f0e");
+        svg.append("circle").attr("cx", 180).attr("cy", 10).attr("r", 6).style("fill", "#2ca02c");
+        svg.append("text").attr("x", 50).attr("y", 10).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 120).attr("y", 10).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 190).attr("y", 10).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
 
         // Define the zoom behavior
         const zoom = d3.zoom()
@@ -102,8 +114,8 @@ function DensityPlot(props) {
             const newY = event.transform.rescaleY(y);
 
             // Update the axes
-            xAxis.call(d3.axisBottom(newX));
-            yAxis.call(d3.axisLeft(newY));
+            xAxisGroup.call(d3.axisBottom(newX));
+            yAxisGroup.call(d3.axisLeft(newY));
 
             // Update the paths
             paths.attr("d", d => {
@@ -113,6 +125,7 @@ function DensityPlot(props) {
                     .y(d => newY(d[1]))(d.density);
             });
         }
+
 
     }
 
