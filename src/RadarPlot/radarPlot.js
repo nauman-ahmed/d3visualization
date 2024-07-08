@@ -5,6 +5,18 @@ import { svg } from "d3";
 
 function RadarPlot(props) {
     
+    const [colors, setColors] = useState(["#4285F4", "#34A853", "pink"])
+
+    // Define the action to take on click
+    function onCircleClick(i) {
+        const colors = ["#4285F4", "#34A853", "pink"]
+        let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"]
+        dummyColors.splice(i-1,1,colors[i-1])
+        setColors(dummyColors)
+        // You can expand this function to do more things, like updating other parts of your visualization
+    }
+
+
     const createPlot = (dataset, id) => {
         const dataSets = dataset
 
@@ -53,7 +65,6 @@ function RadarPlot(props) {
         }
 
 
-        const colors = ["#4285F4", "#34A853", "pink"]; // Colors for the datasets
         const labels = ["Stage 1", "Stage 2", "Stage 3"]; // Labels for the datasets
 
         const width = 300,
@@ -168,30 +179,43 @@ function RadarPlot(props) {
             .attr("y", (d, i) => rScale(1.1) * Math.sin(angleSlice * i - Math.PI/2))
             .text(d => d.axis)
             .style("font-size", "12px")
-            .attr("text-anchor", "middle");
+            .attr("text-anchor", "middle")
+            .on("click",(d, i) => props.selectedVariable(d, i));
 
-        // Adding a legend to the radar chart
-        const legend = svg.append("g")
-            .attr("class", "legend")
-            .attr("transform", `translate(${-width / 2 + 20}, ${-height / 2 + 20})`) // Position top-left corner
-            .selectAll("g")
-            .data(labels)
-            .enter().append("g")
-            .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Vertical alignment of legend items
+        
+        // Handmade legend
+        svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").on("click", () => onCircleClick(1));
+        svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").on("click", () => onCircleClick(2));
+        svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").on("click", () => onCircleClick(3));
+        svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+        svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
+        svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
 
-        legend.append("circle")
-            .attr("cx", width + 10)
-            .attr("cy", 0)
-            .attr("r", 6)
-            .style("fill", (d, i) => colors[i]);
+        // // Adding a legend to the radar chart
+        // const legend = svg.append("g")
+        //     .attr("class", "legend")
+        //     .attr("transform", `translate(${-width / 2 + 20}, ${-height / 2 + 20})`) // Position top-left corner
+        //     .selectAll("g")
+        //     .data(labels)
+        //     .enter().append("g")
+        //     .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Vertical alignment of legend items
 
-        legend.append("text")
-            .attr("x", width + 20)
-            .attr("y", 0)
-            .attr("dy", ".35em")
-            .text(d => d)
-            .style("font-size", "12px")
-            .style("text-anchor", "start");
+        // legend.append("circle")
+        //     .attr("cx", width + 10)
+        //     .attr("cy", 0)
+        //     .attr("r", 6)
+        //     .style("fill", (d, i) => colors[i])
+        //     .on("click",(d, i) => onCircleClick(d, i=="Stage 1" ? 1 : i == "Stage 2" ? 2 : 3));
+        
+        //     legend.append("text")
+        //     .attr("x", width + 20)
+        //     .attr("y", 0)
+        //     .attr("dy", ".35em")
+        //     .text(d => d)
+        //     .style("font-size", "12px")
+        //     .style("text-anchor", "start");
 
     }
 
@@ -208,7 +232,7 @@ function RadarPlot(props) {
                 }
             }
         }
-    }, [props.dataset]);
+    }, [props.dataset,colors]);
 
   return <>
         <div className="col-12 p-4" id={"radar0"}></div>

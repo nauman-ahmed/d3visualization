@@ -61,6 +61,12 @@ function Density(props) {
     }
 
     useEffect(() => {
+        if(colOfInterest.includes(props.variable)){
+            setSelected(props.variable)
+        }
+    },[props.variable])
+
+    useEffect(() => {
         if(props.data.length){
             let keyDatasetsDummy = []
             for (let index = 0; index < colOfInterest.length; index++) {

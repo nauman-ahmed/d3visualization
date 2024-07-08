@@ -19,9 +19,9 @@ function Density(props) {
         uniqueValues.map((value) => {
             let obj1 = {}
             obj1["group"] = value
-            obj1["categoryA"] = data.filter((d) => d.Stage  == "1" && d[col] == value).length
-            obj1["categoryB"] = data.filter((d) => d.Stage  == "2" && d[col] == value).length
-            obj1["categoryC"] = data.filter((d) => d.Stage  == "3" && d[col] == value).length
+            obj1["Stage1"] = data.filter((d) => d.Stage  == "1" && d[col] == value).length
+            obj1["Stage2"] = data.filter((d) => d.Stage  == "2" && d[col] == value).length
+            obj1["Stage3"] = data.filter((d) => d.Stage  == "3" && d[col] == value).length
             subData.push(obj1)
         })
 
@@ -34,6 +34,12 @@ function Density(props) {
         return obj
     }
 
+    useEffect(() => {
+        if(colOfInterest.includes(props.variable)){
+            setSelected(props.variable)
+        }
+    },[props.variable])
+    
     useEffect(() => {
         if(props.data.length){
             let keyDatasetsDummy = []

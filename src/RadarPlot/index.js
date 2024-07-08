@@ -100,7 +100,7 @@ function Radar(props) {
         <div className="col-6">
             <div className="row" >
                 { keyDatasets.length &&
-                    <RadarPlot dataset={keyDatasets} />
+                    <RadarPlot dataset={keyDatasets} selectedVariable={props.selectedVariable}/>
                 }
             </div>
         </div>

@@ -38,13 +38,13 @@ function Scatter(props) {
     },[props])
 
     return (
-        <div className="col-6">
+        <div className="col-6 items-center justify-content-center">
             <div className="mt-5 mb-5 row">
                 <div class="dropdown col-6">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selectedX}
                     </button>
-                    <span className="mx-2">X Axis</span>
+                    {/* <span className="mx-2">X Axis</span> */}
                     <ul class="dropdown-menu">
                         {
                             colOfInterest.map((col) => 
@@ -58,7 +58,7 @@ function Scatter(props) {
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selectedY}
                     </button>
-                    <span className="mx-2">Y Axis</span>
+                    {/* <span className="mx-2">Y Axis</span> */}
                     <ul class="dropdown-menu">
                         {
                             colOfInterest.map((col) => 

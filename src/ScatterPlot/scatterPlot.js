@@ -21,7 +21,7 @@ function ScatterPlot(props) {
         const svgWidth = 500;
         const svgHeight = 300;
         
-        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        const margin = { top: 20, right: 20, bottom: 70, left: 80 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
         
@@ -80,10 +80,31 @@ function ScatterPlot(props) {
             .style("font-size", "12px")
             .style("fill", "black");
         
+        svg.append("text")
+            .attr("x", (width / 2) + margin.left)
+            .attr("y", height + 70)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-family", "Arial, sans-serif")
+            .style("font-weight", "bold")
+            .style("fill", "black")
+            .text(datasetX.col_name);
+
+        svg.append("text")
+            .attr("x", 0)
+            .attr("y", 120)
+            .attr("transform", "rotate(-90," + 20 + "," + (height / 2) + ")")  // Rotate around its current position
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-family", "Arial, sans-serif")
+            .style("font-weight", "bold")
+            .style("fill", "black")
+            .text(datasetY.col_name);
+        
+
         // Define the zoom behavior
         const zoom = d3.zoom()
-            .scaleExtent([1, 10])  // Set the zoom scale extent
-            .translateExtent([[0, 0], [svgWidth, svgHeight]])  // Set the translate extent
+            .scaleExtent([1, 100])  // Set the zoom scale extent
             .extent([[margin.left, margin.top], [width + margin.left, height + margin.top]])
             .on("zoom", zoomed);
         

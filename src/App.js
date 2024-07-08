@@ -9,6 +9,7 @@ import Radar from "./RadarPlot";
 function App() {
 
   const [data, setData] = useState([]);
+  const [variable, setVariable] = useState(null);
 
   useEffect(() => {
 
@@ -42,12 +43,15 @@ function App() {
       .catch(error => console.error('Error loading the CSV file:', error));
   }, []);
 
+  const selectedVariable = (data, variable) => {
+    setVariable(variable.axis)
+  }
 
   return (
     <div className="App row">
-      {data.length && <Density data={data} />}
-      {data.length && <Radar data={data} />}
-      {data.length && <MultiBar data={data} />}
+      {data.length && <Density data={data} variable={variable}/>}
+      {data.length && <Radar data={data} selectedVariable={selectedVariable}/>}
+      {data.length && <MultiBar data={data} variable={variable} />}
       {data.length && <Scatter data={data} />}
     </div>
   );

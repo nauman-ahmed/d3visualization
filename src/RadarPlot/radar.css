@@ -1,3 +1,7 @@
 .radarArea {
     fill-opacity: 0.7;
 }
+
+.radarLabel:hover{
+    cursor: pointer;
+}
