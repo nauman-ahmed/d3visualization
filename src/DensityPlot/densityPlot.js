@@ -35,7 +35,7 @@ function DensityPlot(props) {
         const width = 500, height = 300, margin = { top: 50, right: 100, bottom: 70, left: 50 };
 
         const datasets = dataset.datasets;
-
+        console.log("DATA",dataset)
         const svg = d3.select(id).append("svg")
             .attr("width", width)
             .attr("height", height);
@@ -66,13 +66,6 @@ function DensityPlot(props) {
             .attr("transform", `translate(${margin.left},${height - margin.bottom})`)
             .call(d3.axisBottom(x));
 
-        // Add label for the x-axis
-        xAxisGroup.append("text")
-            .attr("x", 80)
-            .attr("y", 40)  // Adjusted y value to avoid overlap with the axis
-            .style("text-anchor", "middle")
-            .text("Your X-axis Label");
-
         const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
         const allDensity = datasets.map((data, i) => ({
             density: kde(data.map(d => d)),
@@ -80,11 +73,15 @@ function DensityPlot(props) {
         }));
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(allDensity.map(d => d3.max(d.density, d => d[1])))])
+            .domain([d3.min(allDensity.map(d => d3.min(d.density, d => d[1]))), d3.max(allDensity.map(d => d3.max(d.density, d => d[1])))])
             .range([height - margin.top - margin.bottom, 0]);
 
         const yAxisGroup = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`)
+
+
+        yAxisGroup.transition()
+            .duration(1000)
             .call(d3.axisLeft(y));
 
         const line = d3.line()
@@ -102,12 +99,17 @@ function DensityPlot(props) {
             .attr("stroke-linejoin", "round")
             .attr("d", d => line(d.density))
             .on("mouseover", function(event, d) {
+                // Calculate tooltip position relative to SVG
+                const svgPos = svg.node().getBoundingClientRect();
+                const xPos = svgPos.x + margin.left + x(d.density[0][0]); // Adjust with x scale
+                const yPos = svgPos.y + margin.top + y(d.density[0][1]); // Adjust with y scale
+        
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
                 tooltip.html(`Density: ${d3.max(d.density, d => d[1]).toFixed(5)}`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+                    .style("left", xPos + "px")
+                    .style("top", yPos + "px");
             })
             .on("mouseout", function(d) {
                 tooltip.transition()
@@ -151,9 +153,13 @@ function DensityPlot(props) {
             const newY = event.transform.rescaleY(y);
 
             // Update the axes
-            xAxisGroup.call(d3.axisBottom(newX));
-            yAxisGroup.call(d3.axisLeft(newY));
-
+            xAxisGroup.transition()
+                .duration(500)
+                .call(d3.axisBottom(newX));
+        
+            yAxisGroup.transition()
+                .duration(500)
+                .call(d3.axisLeft(newY));
             // Update the paths
             paths.attr("d", d => {
                 return d3.line()
@@ -178,7 +184,6 @@ function DensityPlot(props) {
                 pointer-events: none;
             }
         `);
-        console.log("DATASET",datasets,allDensity)
     };  
 
 

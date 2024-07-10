@@ -3,3 +3,8 @@
     fill: none;
     stroke: black;
 }
+
+.dot:hover {
+    cursor: pointer;
+}
+

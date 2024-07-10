@@ -7,11 +7,9 @@ import { range } from "d3";
 function Radar(props) {
    
     const count = useRef(0)
-    const [selected,setSelected] = useState('Status')
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['Bilirubin', 'Cholesterol', 'Albumin', 
     'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin'])
-    
 
     function calculateMedian(numbers) {
         // Sort the array
@@ -29,6 +27,27 @@ function Radar(props) {
         }
     }
 
+    const prepareBasicData = (data,colOfInterest,selectedPoints) => {
+
+        let Data = []
+
+        
+        for (let index = 0; index < selectedPoints.length; index++) {
+            let subData = []
+            colOfInterest.map((value) => {
+                let obj1 = {}
+                obj1["axis"] = value
+                let arr = data.map(item => item.Name  == selectedPoints[index] && parseInt(item[value], 10))
+                let filteredData = arr.filter(Boolean);
+                obj1["value"] = calculateMedian(filteredData); 
+                subData.push(obj1)
+            })
+            Data.push(subData)
+        }
+        
+        return Data
+    }
+
     const prepareData = (data) => {
 
         let subData1 = []
@@ -39,17 +58,10 @@ function Radar(props) {
             if(index == 1){
                 colOfInterest.map((value) => {
                     let obj1 = {}
-
                     obj1["axis"] = value
                     let arr = data.map(item => item.Stage  == "1" && parseInt(item[value], 10))
                     let filteredData = arr.filter(Boolean);
-                    let sum = filteredData.reduce((accumulator, currentValue) => {
-                        return accumulator + currentValue;
-                    }, 0); // The '0' is the initial value of the accumulator
-                    let mean = (sum / filteredData.length).toFixed(2)
-
                     obj1["value"] = calculateMedian(filteredData); 
-
                     subData1.push(obj1)
 
                 })
@@ -59,12 +71,6 @@ function Radar(props) {
                     obj2["axis"] = value
                     let arr = data.map(item => item.Stage  == "2" && parseInt(item[value], 10))
                     let filteredData = arr.filter(Boolean);
-                    let sum = filteredData.reduce((accumulator, currentValue) => {
-                        return accumulator + currentValue;
-                    }, 0); // The '0' is the initial value of the accumulator
-                    let mean = (sum / filteredData.length).toFixed(2)
-
-
                     obj2["value"] = calculateMedian(filteredData); 
                     subData2.push(obj2)
                 })
@@ -74,11 +80,6 @@ function Radar(props) {
                     obj3["axis"] = value
                     let arr = data.map(item => item.Stage  == "3" && parseInt(item[value], 10))
                     let filteredData = arr.filter(Boolean);
-                    let sum = filteredData.reduce((accumulator, currentValue) => {
-                        return accumulator + currentValue;
-                    }, 0); // The '0' is the initial value of the accumulator
-                    let mean = (sum / filteredData.length).toFixed(2)
-
                     obj3["value"] = calculateMedian(filteredData); 
                     subData3.push(obj3)
                 })
@@ -88,19 +89,31 @@ function Radar(props) {
         return [subData1, subData2, subData3]
     }
 
+    
+
     useEffect(() => {
-        if(props.data.length && count.current == 0){
+        if(props.data.length ){
+            if(props.colOfInterest){
+                setColOfInterest(props.colOfInterest)
+            }
             count.current = 1
-            const dataset = prepareData(props.data,colOfInterest)
+            const dataset = props.colOfInterest ? prepareBasicData(props.data,props.colOfInterest,props.selectedPoints) : prepareData(props.data,colOfInterest)
             setKeyDatasets(dataset)
         }
-    },[props])
+    },[props,colOfInterest])
 
     return (
-        <div className="col-6">
+        <div className="col-sm-12 col-lg-6 ">
             <div className="row" >
-                { keyDatasets.length &&
-                    <RadarPlot dataset={keyDatasets} selectedVariable={props.selectedVariable}/>
+                { keyDatasets.length ?
+                    <RadarPlot 
+                        dataset={keyDatasets} 
+                        selectedVariable={props.selectedVariable} 
+                        selectedPoints={props.selectedPoints}
+                        filterOptions={props.filterOptions}
+                    />
+                    :
+                    null
                 }
             </div>
         </div>

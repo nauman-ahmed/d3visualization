@@ -5,6 +5,12 @@ import { svg } from "d3";
 
 function ScatterPlot(props) {
 
+    const scatterClickHandler = (event,d,datasetX,datasetY) => {
+        if(props.clickHandler){
+            props.clickHandler(event,d,datasetX.col_name,datasetY.col_name)
+        }
+    }
+
     const createPlot = (datasetX, datasetY, id) => {
         const data = [
             { x: datasetX.datasets, y: datasetY.datasets }
@@ -60,6 +66,11 @@ function ScatterPlot(props) {
             .attr("transform", `translate(${margin.left},${margin.top})`)
             .call(yAxis);
         
+        // Define the tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+            
         const dots = chartGroup.selectAll(".dot")
             .data(points)
             .enter().append("circle")
@@ -67,7 +78,38 @@ function ScatterPlot(props) {
             .attr("cx", d => x(d.x))
             .attr("cy", d => y(d.y))
             .attr("r", 5)
-            .style("fill", "#4285F4");
+            .on("click",(event,d) => scatterClickHandler(event,d,datasetX,datasetY))
+            .style("fill", "#4285F4")
+            .on("mouseover", function(event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`(${d.x}, ${d.y})`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            // Tooltip mouseout event handling
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+        
+        // CSS for tooltip
+        d3.select("head").append("style").text(`
+            .tooltip {
+                position: absolute;
+                text-align: center;
+                width: auto;
+                height: auto;
+                padding: 5px;
+                font: 12px sans-serif;
+                background: lightsteelblue;
+                border: 0px;
+                border-radius: 8px;
+                pointer-events: none;
+            }
+        `);
         
         // Optional: Adding labels to each data point
         const labels = chartGroup.selectAll(".text")
@@ -147,7 +189,7 @@ function ScatterPlot(props) {
     }, [props.datasetX]);
 
   return <>
-        <div className="col-12 p-4" id={"scatter0"}></div>
+        <div className="col-12 p-4  col-sm-12" id={"scatter0"}></div>
      </>;
 }
 

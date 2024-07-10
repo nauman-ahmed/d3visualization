@@ -16,7 +16,7 @@ function Density(props) {
         let stage_3 = []
 
         data.map((data,index) => {
-            if(index < 100) {
+            if(index < 100000) {
                 if(data.Stage == "1"){
                     stage_1.push(parseInt(data[col], 10))
                 }
@@ -77,7 +77,7 @@ function Density(props) {
     },[props])
 
     return (
-        <div className="col-6">
+        <div className="col-sm-12 col-lg-6 ">
             <div className="mt-5 mb-5">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -94,8 +94,10 @@ function Density(props) {
                 </div>
             </div>
             <div className="row" >
-                { keyDatasets.length &&
+                { keyDatasets.length ?
                     <DensityPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} />
+                    :
+                    null
                 }
             </div>
         </div>

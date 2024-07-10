@@ -51,7 +51,7 @@ function Density(props) {
     },[props])
 
     return (
-        <div className="col-6">
+        <div className="col-sm-12 col-lg-6 ">
             <div className="mt-5 mb-5">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -68,8 +68,10 @@ function Density(props) {
                 </div>
             </div>
             <div className="row" >
-                { keyDatasets.length &&
+                { keyDatasets.length ?
                     <MultiBarChartPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} />
+                    :
+                    null
                 }
             </div>
         </div>

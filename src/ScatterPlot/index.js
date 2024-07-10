@@ -29,16 +29,21 @@ function Scatter(props) {
 
     useEffect(() => {
         if(props.data.length){
+            if(props.colOfInterest){
+                setColOfInterest(props.colOfInterest)
+                setSelectedX(props.X)
+                setSelectedY(props.Y)
+            }
             let keyDatasetsDummy = []
             for (let index = 0; index < colOfInterest.length; index++) {
                 keyDatasetsDummy.push(prepareData(props.data,colOfInterest[index])) 
             }
             setKeyDatasets(keyDatasetsDummy)
         }
-    },[props])
+    },[props,colOfInterest])
 
     return (
-        <div className="col-6 items-center justify-content-center">
+        <div className="col-sm-12 col-lg-6 items-center justify-content-center">
             <div className="mt-5 mb-5 row">
                 <div class="dropdown col-6">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,8 +75,14 @@ function Scatter(props) {
                 </div>
             </div>
             <div className="row" >
-                { keyDatasets.length &&
-                    <ScatterPlot datasetX={keyDatasets.filter((dataset) => dataset.col_name == selectedX)} datasetY={keyDatasets.filter((dataset) => dataset.col_name == selectedY)} />
+                { keyDatasets.length ?
+                    <ScatterPlot 
+                        datasetX={keyDatasets.filter((dataset) => dataset.col_name == selectedX)} 
+                        datasetY={keyDatasets.filter((dataset) => dataset.col_name == selectedY)} 
+                        clickHandler={props.clickHandler}
+                    />
+                    :
+                    null
                 }
             </div>
         </div>

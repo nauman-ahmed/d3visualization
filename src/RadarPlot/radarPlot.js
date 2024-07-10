@@ -5,11 +5,11 @@ import { svg } from "d3";
 
 function RadarPlot(props) {
     
-    const [colors, setColors] = useState(["#4285F4", "#34A853", "pink"])
+    const [colors, setColors] = useState(["#4285F4", "#34A853", "pink","yellow","red"])
 
     // Define the action to take on click
     function onCircleClick(i) {
-        const colors = ["#4285F4", "#34A853", "pink"]
+        const colors = ["#4285F4", "#34A853", "pink","yellow","red"]
         let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"]
         dummyColors.splice(i-1,1,colors[i-1])
         setColors(dummyColors)
@@ -19,7 +19,6 @@ function RadarPlot(props) {
 
     const createPlot = (dataset, id) => {
         const dataSets = dataset
-
         // Find the max value for each axis to normalize data accordingly
         let axisMaxValues = {};
         dataSets.flat().forEach(d => {
@@ -64,8 +63,6 @@ function RadarPlot(props) {
             binnedData[axis] = bins
         }
 
-
-        const labels = ["Stage 1", "Stage 2", "Stage 3"]; // Labels for the datasets
 
         const width = 300,
                 height = 300,
@@ -180,18 +177,27 @@ function RadarPlot(props) {
             .text(d => d.axis)
             .style("font-size", "12px")
             .attr("text-anchor", "middle")
-            .on("click",(d, i) => props.selectedVariable(d, i));
+            .on("click",(d, i) => props.selectedVariable ? props.selectedVariable(d, i) : null);
 
-        
-        // Handmade legend
-        svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").on("click", () => onCircleClick(1));
-        svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").on("click", () => onCircleClick(2));
-        svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").on("click", () => onCircleClick(3));
-        svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
-        svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
+        if(props.selectedPoints){
+            const yCoordinates = [-150, -130, -110, -90, -70, -50]
+
+            for (let index = 0; index < props.selectedPoints.length; index++) {
+                svg.append("circle").attr("cx", 200).attr("cy", yCoordinates[index]).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                svg.append("text").attr("x", 210).attr("y", yCoordinates[index]).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+            }
+        }else{
+            // Handmade legend
+            svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").on("click", () => onCircleClick(1));
+            svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").on("click", () => onCircleClick(2));
+            svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").on("click", () => onCircleClick(3));
+            svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+            svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
+            svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
+            svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
+            svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
+
+        }
 
         // // Adding a legend to the radar chart
         // const legend = svg.append("g")

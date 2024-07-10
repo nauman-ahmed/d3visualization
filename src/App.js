@@ -1,15 +1,40 @@
 import { useEffect, useState } from "react"
 import './App.css';
 import { parse } from 'papaparse';
+import Papa from 'papaparse';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
+import classnames from 'classnames';
+
 import Density from './DensityPlot';
 import MultiBar from "./MultibarPlot";
 import Scatter from "./ScatterPlot";
 import Radar from "./RadarPlot";
+import TableView from "./TableView";
+import Visualization from "./BasicVisualization";
 
 function App() {
 
   const [data, setData] = useState([]);
+  const [basicData, setBasicData] = useState([]);
   const [variable, setVariable] = useState(null);
+  const [activeTab, setActiveTab] = useState('1');
+
+  const toggle = tab => {
+    if (activeTab !== tab) setActiveTab(tab);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+    Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          setBasicData(results.data);
+        },
+    });
+    }
+};
 
   useEffect(() => {
 
@@ -48,12 +73,63 @@ function App() {
   }
 
   return (
-    <div className="App row">
-      {data.length && <Density data={data} variable={variable}/>}
-      {data.length && <Radar data={data} selectedVariable={selectedVariable}/>}
-      {data.length && <MultiBar data={data} variable={variable} />}
-      {data.length && <Scatter data={data} />}
+    <div>
+      <Nav tabs className="row">
+        <NavItem className="col-lg-4 mt-2 col-sm-12">
+          <NavLink
+            className={classnames({ active: activeTab === '1' }) + " d-flex justify-content-center"}
+            onClick={() => { toggle('1');}}
+          >
+            Table View
+          </NavLink>
+        </NavItem>
+        <NavItem className="col-lg-4 mt-2 col-sm-12">
+          <NavLink
+            className={classnames({ active: activeTab === '2' }) + " d-flex justify-content-center"}
+            onClick={() => { toggle('2'); }}
+          >
+            Basic Visualization
+          </NavLink>
+        </NavItem>
+        <NavItem className="col-lg-4 mt-2 col-sm-12">
+          <NavLink
+            className={classnames({ active: activeTab === '3' }) + " d-flex justify-content-center"}
+            onClick={() => { toggle('3'); }}
+          >
+            Dashboard
+          </NavLink>
+        </NavItem>
+      </Nav>
+      <TabContent activeTab={activeTab}>
+        <TabPane tabId="1">
+          <Row>
+            <Col sm="12">
+              <TableView basicData={basicData} handleFileChange={handleFileChange}/>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tabId="2">
+          <Row>
+            <Col sm="12">
+              {basicData.length && activeTab == "2" ? <Visualization data={basicData}/> : null}
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tabId="3">
+          <Row>
+            <Col sm="12">
+              <div className="App row">
+                {data.length && activeTab == "3" &&  <Density data={data} variable={variable}/>}
+                {data.length && activeTab == "3" &&  <Radar data={data} selectedVariable={selectedVariable}/>}
+                {data.length && activeTab == "3" &&  <MultiBar data={data} variable={variable} />}
+                {data.length && activeTab == "3" &&  <Scatter data={data} />} 
+              </div>
+            </Col>
+          </Row>
+        </TabPane>      
+      </TabContent>
     </div>
+  
   );
 }
 
