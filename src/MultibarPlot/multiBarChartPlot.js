@@ -6,7 +6,7 @@ import { svg } from "d3";
 function MultiBarChartPlot(props) {
 
     const [colors, setColors] = useState(["#1f77b4", "#ff7f0e", "#2ca02c"])
-
+    
     // Define the action to take on click
     function onCircleClick(i) {
         const colors = ["#1f77b4", "#ff7f0e", "#2ca02c"]
@@ -51,10 +51,6 @@ function MultiBarChartPlot(props) {
             .nice()
             .rangeRound([height, 0]);
         
-        const yRight = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d3.max([d.Stage1, d.Stage2, d.Stage3]))])
-            .nice()
-            .rangeRound([height, 0]);
         
         const xAxis = d3.axisBottom(x0);
         const yAxis = d3.axisLeft(y);
@@ -98,10 +94,12 @@ function MultiBarChartPlot(props) {
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", `translate(0, ${height})`)
+            .transition().duration(1000)
             .call(xAxis);
         
         svg.append("g")
             .attr("class", "y axis")
+            .transition().duration(1000)
             .call(yAxis);
         
         svg.append("text")
@@ -115,14 +113,24 @@ function MultiBarChartPlot(props) {
             .text(dataset.col_name);
         
         // Handmade legend
-        svg.append("circle").attr("cx", 20).attr("cy", 0).attr("r", 6).style("fill", "#1f77b4").on("click", () => onCircleClick(1));
-        svg.append("circle").attr("cx", 80).attr("cy", 0).attr("r", 6).style("fill", "#ff7f0e").on("click", () => onCircleClick(2));
-        svg.append("circle").attr("cx", 140).attr("cy", 0).attr("r", 6).style("fill", "#2ca02c").on("click", () => onCircleClick(3));
-        svg.append("circle").attr("cx", 200).attr("cy", 0).attr("r", 6).style("fill", "red").on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));;
-        svg.append("text").attr("x", 30).attr("y", 0).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 90).attr("y", 0).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 150).attr("y", 0).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 210).attr("y", 0).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
+        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", 0).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
+        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", 0).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
+        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", 0).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
+        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", 0).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));;
+        const text1 = svg.append("text").attr("x", 60).attr("y", 0).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text2 = svg.append("text").attr("x", 130).attr("y", 0).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text3 = svg.append("text").attr("x", 200).attr("y", 0).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text4 = svg.append("text").attr("x", 270).attr("y", 0).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+
+        circle1.transition().duration(300).style("opacity", 1);
+        circle2.transition().duration(600).style("opacity", 1);
+        circle3.transition().duration(700).style("opacity", 1);
+        circle4.transition().duration(800).style("opacity", 1);
+
+        text1.transition().duration(300).style("opacity", 1);
+        text2.transition().duration(600).style("opacity", 1);
+        text3.transition().duration(700).style("opacity", 1);
+        text4.transition().duration(800).style("opacity", 1);
         
         // Add CSS for tooltip
         d3.select("head").append("style").text(`

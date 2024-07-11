@@ -7,11 +7,13 @@ function ScatterPlot(props) {
 
     const scatterClickHandler = (event,d,datasetX,datasetY) => {
         if(props.clickHandler){
+            
             props.clickHandler(event,d,datasetX.col_name,datasetY.col_name)
         }
     }
 
-    const createPlot = (datasetX, datasetY, id) => {
+    const createPlot = (datasetX, datasetY, id, duration= 4000) => {
+        console.log("isMobileView",props.isMobileView)
         const data = [
             { x: datasetX.datasets, y: datasetY.datasets }
         ];
@@ -59,13 +61,14 @@ function ScatterPlot(props) {
         const yAxis = d3.axisLeft(y);
         
         const xAxisGroup = svg.append("g")
-            .attr("transform", `translate(${margin.left},${margin.top + height})`)
-            .call(xAxis);
+            .attr("transform", `translate(${margin.left},${margin.top + height})`);
+    
+        xAxisGroup.transition().duration(duration).call(xAxis);
         
         const yAxisGroup = svg.append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`)
-            .call(yAxis);
+            .attr("transform", `translate(${margin.left},${margin.top})`);
         
+        yAxisGroup.transition().duration(duration).call(yAxis);
         // Define the tooltip
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -78,7 +81,11 @@ function ScatterPlot(props) {
             .attr("cx", d => x(d.x))
             .attr("cy", d => y(d.y))
             .attr("r", 5)
-            .on("click",(event,d) => scatterClickHandler(event,d,datasetX,datasetY))
+            .on("click",(event,d) => {
+                tooltip.transition()
+                    .style("opacity", 0);
+                scatterClickHandler(event,d,datasetX,datasetY)
+            })
             .style("fill", "#4285F4")
             .on("mouseover", function(event, d) {
                 tooltip.transition()
@@ -90,6 +97,11 @@ function ScatterPlot(props) {
             })
             // Tooltip mouseout event handling
             .on("mouseout", function(event, d) {
+                const tools = document.getElementsByClassName("tooltip")
+                Object.keys(tools).forEach(key => {
+                    tools[key].style.opacity = 0
+                    console.log(`Key: ${key}, Value: ${tools[key].style.opacity}`);
+                });
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
@@ -178,7 +190,7 @@ function ScatterPlot(props) {
             var container = document.getElementById("scatter0");
             var svgs = container.getElementsByTagName('svg');
             
-            createPlot(props.datasetX[0], props.datasetY[0],"#"+"scatter0")
+            createPlot(props.datasetX[0], props.datasetY[0],"#"+"scatter0",props.duration)
 
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){

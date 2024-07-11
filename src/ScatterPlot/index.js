@@ -43,9 +43,9 @@ function Scatter(props) {
     },[props,colOfInterest])
 
     return (
-        <div className="col-sm-12 col-lg-6 items-center justify-content-center">
-            <div className="mt-5 mb-5 row">
-                <div class="dropdown col-6">
+        <div className="col-sm-12 col-lg-6 ">
+            <div className="mt-5 mb-5 row ">
+                <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selectedX}
                     </button>
@@ -59,7 +59,7 @@ function Scatter(props) {
                         }
                     </ul>
                 </div>
-                <div class="dropdown col-6">
+                <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selectedY}
                     </button>
@@ -80,6 +80,8 @@ function Scatter(props) {
                         datasetX={keyDatasets.filter((dataset) => dataset.col_name == selectedX)} 
                         datasetY={keyDatasets.filter((dataset) => dataset.col_name == selectedY)} 
                         clickHandler={props.clickHandler}
+                        duration={1000}
+                        isMobileView={props.isMobileView}
                     />
                     :
                     null

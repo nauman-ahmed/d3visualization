@@ -188,40 +188,27 @@ function RadarPlot(props) {
             }
         }else{
             // Handmade legend
-            svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").on("click", () => onCircleClick(1));
-            svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").on("click", () => onCircleClick(2));
-            svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").on("click", () => onCircleClick(3));
-            svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
-            svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
-            svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
-            svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
-            svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
+            const circle1 = svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").style("opacity", 0).on("click", () => onCircleClick(1));
+            const circle2 = svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
+            const circle3 = svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
+            const circle4 = svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+            const text1 = svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text2 = svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text3 = svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text4 = svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
+            circle1.transition().duration(4000).style("opacity", 1);
+            circle2.transition().duration(4200).style("opacity", 1);
+            circle3.transition().duration(4400).style("opacity", 1);
+            circle4.transition().duration(4600).style("opacity", 1);
+
+            text1.transition().duration(4000).style("opacity", 1);
+            text2.transition().duration(4200).style("opacity", 1);
+            text3.transition().duration(4400).style("opacity", 1);
+            text4.transition().duration(4600).style("opacity", 1);
+            
         }
 
-        // // Adding a legend to the radar chart
-        // const legend = svg.append("g")
-        //     .attr("class", "legend")
-        //     .attr("transform", `translate(${-width / 2 + 20}, ${-height / 2 + 20})`) // Position top-left corner
-        //     .selectAll("g")
-        //     .data(labels)
-        //     .enter().append("g")
-        //     .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Vertical alignment of legend items
-
-        // legend.append("circle")
-        //     .attr("cx", width + 10)
-        //     .attr("cy", 0)
-        //     .attr("r", 6)
-        //     .style("fill", (d, i) => colors[i])
-        //     .on("click",(d, i) => onCircleClick(d, i=="Stage 1" ? 1 : i == "Stage 2" ? 2 : 3));
-        
-        //     legend.append("text")
-        //     .attr("x", width + 20)
-        //     .attr("y", 0)
-        //     .attr("dy", ".35em")
-        //     .text(d => d)
-        //     .style("font-size", "12px")
-        //     .style("text-anchor", "start");
 
     }
 

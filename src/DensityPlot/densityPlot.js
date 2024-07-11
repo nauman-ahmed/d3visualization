@@ -37,14 +37,21 @@ function DensityPlot(props) {
         const svg = d3.select(id).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .style("background-color", "white") // Set the background color to white
+            .style("background-color", "white")
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Sample data for three stages of liver cirrhosis
-        const stage1 = dataset.datasets[0] 
-        const stage2 = dataset.datasets[1]
-        const stage3 = dataset.datasets[2]
+        // Create a clip path to prevent content from going out of bounds
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Sample data for three stages of liver cirrhosis
+        const stage1 = dataset.datasets[0];
+        const stage2 = dataset.datasets[1];
+        const stage3 = dataset.datasets[2];
 
         // Combine the data
         const data = [
@@ -55,9 +62,9 @@ function DensityPlot(props) {
 
         // Set the ranges
         const x = d3.scaleLinear()
-            .domain([-10, dataset.maxNumber+10])
+            .domain([-10, dataset.maxNumber + 10])
             .range([0, width]);
-
+        
         const y = d3.scaleLinear()
             .range([height, 0]);
 
@@ -67,7 +74,7 @@ function DensityPlot(props) {
         // Define the colors for each stage
         const color = d3.scaleOrdinal()
             .domain(["Stage 1", "Stage 2", "Stage 3"])
-            .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
+            .range(colors);
 
         // Create a tooltip element
         const tooltip = d3.select("body").append("div")
@@ -80,16 +87,30 @@ function DensityPlot(props) {
             .style("border-radius", "5px")
             .style("padding", "10px");
 
-        // Add the density plot for each stage
-        data.forEach(stage => {
-            const density = kde(stage.values);
-            y.domain([0, d3.max(density, d => d[1])]);
+        // Add a transparent rectangle to capture zoom events
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all");
 
-            svg.append("path")
-                .datum(density)
+        // Calculate density once and store it
+        const densities = data.map(stage => {
+            const density = kde(stage.values);
+            return { key: stage.key, density: density };
+        });
+
+        // Add the density plot for each stage
+        const densityPaths = densities.map(stage => {
+            y.domain([0, d3.max(stage.density, d => d[1])]);
+
+            return svg.append("path")
+                .datum(stage.density)
+                .attr("class", "density-path")
                 .attr("fill", color(stage.key))
                 .attr("opacity", "0.4")
                 .attr("stroke", "none")
+                .attr("clip-path", "url(#clip)")
                 .attr("d", d3.area()
                     .curve(d3.curveBasis)
                     .x(d => x(d[0]))
@@ -122,38 +143,86 @@ function DensityPlot(props) {
         });
 
         // Add the X Axis
-        svg.append("g")
+        const xAxis = svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(x));
-
-        // Add the Y Axis
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(d3.axisLeft(y));
-
-        // Add legend
-        const legend = svg.selectAll(".legend")
-            .data(color.domain())
-            .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", (d, i) => `translate(0,${i * 20})`);
-
-        legend.append("rect")
-            .attr("x", width - 18)
-            .attr("width", 18)
-            .attr("height", 18)
-            .style("fill", color);
-
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .style("text-anchor", "end")
-            .text(d => d);
-
-            
+            .attr("transform", `translate(0,${height})`);
         
+        xAxis.transition().duration(1000).call(d3.axisBottom(x));
+        // Add the Y Axis
+        const yAxis = svg.append("g")
+            .attr("class", "y axis");
+
+        yAxis.transition().duration(1000).call(d3.axisLeft(y));
+    
+        // Handmade legend
+        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", 0).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
+        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", 0).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
+        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", 0).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
+        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", 0).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));;
+        const text1 = svg.append("text").attr("x", 60).attr("y", 0).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text2 = svg.append("text").attr("x", 130).attr("y", 0).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text3 = svg.append("text").attr("x", 200).attr("y", 0).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text4 = svg.append("text").attr("x", 270).attr("y", 0).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+
+        circle1.transition().duration(300).style("opacity", 1);
+        circle2.transition().duration(600).style("opacity", 1);
+        circle3.transition().duration(700).style("opacity", 1);
+        circle4.transition().duration(800).style("opacity", 1);
+
+        text1.transition().duration(300).style("opacity", 1);
+        text2.transition().duration(600).style("opacity", 1);
+        text3.transition().duration(700).style("opacity", 1);
+        text4.transition().duration(800).style("opacity", 1);
+
+        // Add zoom functionality
+        const zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .translateExtent([[-margin.left, -margin.top], [width + margin.right, height + margin.bottom]])
+            .extent([[0, 0], [width, height]])
+            .on("zoom", zoomed);
+
+        svg.call(zoom);
+
+        function zoomed(event) {
+            const transform = event.transform;
+            const newX = transform.rescaleX(x);
+            const newY = transform.rescaleY(y);
+
+            // Update axes
+            xAxis.call(d3.axisBottom(newX));
+            yAxis.call(d3.axisLeft(newY));
+
+            // Update density paths without recalculating density
+            densityPaths.forEach((path, i) => {
+                path.attr("d", d3.area()
+                    .curve(d3.curveBasis)
+                    .x(d => newX(d[0]))
+                    .y1(d => newY(d[1]))
+                    .y0(newY(0)));
+            });
+
+            // Update tooltip to reflect the transformed scales
+            svg.selectAll(".density-path")
+                .on("mouseover", (event, d) => {
+                    const [mouseX, mouseY] = d3.pointer(event);
+                    const xValue = newX.invert(mouseX);
+                    const yValue = newY.invert(mouseY);
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`X: ${xValue.toFixed(2)}<br/>Y: ${yValue.toFixed(4)}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", (event, d) => {
+                    const [mouseX, mouseY] = d3.pointer(event);
+                    const xValue = newX.invert(mouseX);
+                    const yValue = newY.invert(mouseY);
+                    tooltip.html(`X: ${xValue.toFixed(2)}<br/>Y: ${yValue.toFixed(4)}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                });
+        }
        
     };  
 

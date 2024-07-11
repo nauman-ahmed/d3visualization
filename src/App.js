@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import './App.css';
 import { parse } from 'papaparse';
 import Papa from 'papaparse';
@@ -18,6 +18,21 @@ function App() {
   const [basicData, setBasicData] = useState([]);
   const [variable, setVariable] = useState(null);
   const [activeTab, setActiveTab] = useState('1');
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 500 ? true : false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 500 ? true : false)
+    };
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Remove event listener on cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -74,6 +89,7 @@ function App() {
 
   return (
     <div>
+      {console.log("INNER WIDTH",isMobileView)}
       <Nav tabs className="row">
         <NavItem className="col-lg-4 mt-2 col-sm-12">
           <NavLink
@@ -111,7 +127,7 @@ function App() {
         <TabPane tabId="2">
           <Row>
             <Col sm="12">
-              {basicData.length && activeTab == "2" ? <Visualization data={basicData}/> : null}
+              {basicData.length && activeTab == "2" ? <Visualization data={basicData} isMobileView={isMobileView}/> : null}
             </Col>
           </Row>
         </TabPane>

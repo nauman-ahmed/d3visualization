@@ -30,8 +30,8 @@ function Visualization(props) {
 
     return (
         <div className="container row">
-            {props.data.length ? <Scatter data={props.data} colOfInterest={colOfInterest} X={"Power (hp)"} Y={"Weight (lb)"} clickHandler={clickHandler}/> : null}
-            {props.data.length ? <Radar data={props.data} colOfInterest={colOfInterest} selectedPoints={selectedPoints} filterOptions={filterOptions}/> : null}
+            {props.data.length ? <Scatter isMobileView={props.isMobileView} data={props.data} colOfInterest={colOfInterest} X={"Power (hp)"} Y={"Weight (lb)"} clickHandler={clickHandler}/> : null}
+            {props.data.length ? <Radar isMobileView={props.isMobileView} data={props.data} colOfInterest={colOfInterest} selectedPoints={selectedPoints} filterOptions={filterOptions}/> : null}
         
         </div>
     );

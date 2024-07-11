@@ -13,7 +13,7 @@ function TableView(props) {
                 className="form-control my-3"
             />
             {props.basicData.length > 0 && (
-                <Table striped>
+                <Table striped responsive>
                 <thead>
                     <tr>
                     {Object.keys(props.basicData[0]).map((key) => (
