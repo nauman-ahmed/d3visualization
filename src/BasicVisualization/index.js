@@ -24,7 +24,6 @@ function Visualization(props) {
         let dummy = [...selectedPoints]
         dummy = dummy.filter(d => d !== col)
         setSelectedPoints(dummy)
-        console.log("filterOptions",dummy)
     }
 
     useEffect(() => {},[selectedPoints])

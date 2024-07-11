@@ -32,158 +32,129 @@ function DensityPlot(props) {
     }
 
     const createPlot = (dataset, id) => {
-        const width = 500, height = 300, margin = { top: 50, right: 100, bottom: 70, left: 50 };
+        const width = 500, height = 300, margin = { top: 40, right: 200, bottom: 70, left: 40 };
 
-        const datasets = dataset.datasets;
-        console.log("DATA",dataset)
         const svg = d3.select(id).append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .style("background-color", "white") // Set the background color to white
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        // Create a clip path to prevent elements from overflowing
-        svg.append("defs").append("clipPath")
-            .attr("id", "clip")
-            .append("rect")
-            .attr("width", width - margin.left - margin.right)
-            .attr("height", height - margin.top - margin.bottom)
-            .attr("x", 0)
-            .attr("y", 0);
+            // Sample data for three stages of liver cirrhosis
+        const stage1 = dataset.datasets[0] 
+        const stage2 = dataset.datasets[1]
+        const stage3 = dataset.datasets[2]
 
-        const chartArea = svg.append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`)
-            .attr("clip-path", "url(#clip)");
+        // Combine the data
+        const data = [
+            { key: "Stage 1", values: stage1 },
+            { key: "Stage 2", values: stage2 },
+            { key: "Stage 3", values: stage3 }
+        ];
 
-        // Create tooltip div
-        const tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-
+        // Set the ranges
         const x = d3.scaleLinear()
-            .domain([0, dataset.maxNumber])  // Adjust domain to accommodate all data
-            .range([0, width - margin.left - margin.right]);
-
-        const xAxisGroup = svg.append("g")
-            .attr("transform", `translate(${margin.left},${height - margin.bottom})`)
-            .call(d3.axisBottom(x));
-
-        const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
-        const allDensity = datasets.map((data, i) => ({
-            density: kde(data.map(d => d)),
-            color: colors[i]
-        }));
+            .domain([-10, dataset.maxNumber+10])
+            .range([0, width]);
 
         const y = d3.scaleLinear()
-            .domain([d3.min(allDensity.map(d => d3.min(d.density, d => d[1]))), d3.max(allDensity.map(d => d3.max(d.density, d => d[1])))])
-            .range([height - margin.top - margin.bottom, 0]);
+            .range([height, 0]);
 
-        const yAxisGroup = svg.append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`)
+        // Set the parameters for the kernel density estimator
+        const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
 
+        // Define the colors for each stage
+        const color = d3.scaleOrdinal()
+            .domain(["Stage 1", "Stage 2", "Stage 3"])
+            .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
 
-        yAxisGroup.transition()
-            .duration(1000)
+        // Create a tooltip element
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0)
+            .style("position", "absolute")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "1px")
+            .style("border-radius", "5px")
+            .style("padding", "10px");
+
+        // Add the density plot for each stage
+        data.forEach(stage => {
+            const density = kde(stage.values);
+            y.domain([0, d3.max(density, d => d[1])]);
+
+            svg.append("path")
+                .datum(density)
+                .attr("fill", color(stage.key))
+                .attr("opacity", "0.4")
+                .attr("stroke", "none")
+                .attr("d", d3.area()
+                    .curve(d3.curveBasis)
+                    .x(d => x(d[0]))
+                    .y1(d => y(d[1]))
+                    .y0(y(0)))
+                .on("mouseover", (event, d) => {
+                    const [mouseX, mouseY] = d3.pointer(event);
+                    const xValue = x.invert(mouseX);
+                    const yValue = y.invert(mouseY);
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Stage: ${stage.key}<br/>X: ${xValue.toFixed(2)}<br/>Y: ${yValue.toFixed(4)}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mousemove", (event, d) => {
+                    const [mouseX, mouseY] = d3.pointer(event);
+                    const xValue = x.invert(mouseX);
+                    const yValue = y.invert(mouseY);
+                    tooltip.html(`Stage: ${stage.key}<br/>X: ${xValue.toFixed(2)}<br/>Y: ${yValue.toFixed(4)}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", (d) => {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        });
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
             .call(d3.axisLeft(y));
 
-        const line = d3.line()
-            .curve(d3.curveBasis)
-            .x(d => x(d[0]))
-            .y(d => y(d[1]));
+        // Add legend
+        const legend = svg.selectAll(".legend")
+            .data(color.domain())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", (d, i) => `translate(0,${i * 20})`);
 
-        const paths = chartArea.selectAll("path")
-            .data(allDensity)
-            .enter().append("path")
-            .attr("fill", d => d.color)
-            .attr("opacity", ".4")
-            .attr("stroke", "#000")
-            .attr("stroke-width", 1)
-            .attr("stroke-linejoin", "round")
-            .attr("d", d => line(d.density))
-            .on("mouseover", function(event, d) {
-                // Calculate tooltip position relative to SVG
-                const svgPos = svg.node().getBoundingClientRect();
-                const xPos = svgPos.x + margin.left + x(d.density[0][0]); // Adjust with x scale
-                const yPos = svgPos.y + margin.top + y(d.density[0][1]); // Adjust with y scale
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(d => d);
+
+            
         
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(`Density: ${d3.max(d.density, d => d[1]).toFixed(5)}`)
-                    .style("left", xPos + "px")
-                    .style("top", yPos + "px");
-            })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
-
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", height - 10)
-            .attr("text-anchor", "middle")
-            .style("font-size", "16px")
-            .style("font-family", "Arial, sans-serif")
-            .style("font-weight", "bold")
-            .style("fill", "black")
-            .text(dataset.col_name);
-
-        // Handmade legend
-        svg.append("circle").attr("cx", 70).attr("cy", 10).attr("r", 6).style("fill", "#1f77b4").on("click", () => onCircleClick(1));
-        svg.append("circle").attr("cx", 140).attr("cy", 10).attr("r", 6).style("fill", "#ff7f0e").on("click", () => onCircleClick(2));
-        svg.append("circle").attr("cx", 210).attr("cy", 10).attr("r", 6).style("fill", "#2ca02c").on("click", () => onCircleClick(3));
-        svg.append("circle").attr("cx", 280).attr("cy", 10).attr("r", 6).style("fill", "red").on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));
-        svg.append("text").attr("x", 80).attr("y", 10).text("Stage 1").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 150).attr("y", 10).text("Stage 2").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 220).attr("y", 10).text("Stage 3").style("font-size", "10px").attr("alignment-baseline", "middle");
-        svg.append("text").attr("x", 290).attr("y", 10).text("Reset").style("font-size", "10px").attr("alignment-baseline", "middle");
-
-        // Define the zoom behavior
-        const zoom = d3.zoom()
-            .scaleExtent([1, 10])  // Set the zoom scale extent
-            .translateExtent([[0, 0], [width, height]])  // Set the translate extent
-            .extent([[0, 0], [width, height]])
-            .on("zoom", zoomed);
-
-        // Attach the zoom behavior to the SVG
-        svg.call(zoom);
-
-        function zoomed(event) {
-            // Create new scales based on the event transform
-            const newX = event.transform.rescaleX(x);
-            const newY = event.transform.rescaleY(y);
-
-            // Update the axes
-            xAxisGroup.transition()
-                .duration(500)
-                .call(d3.axisBottom(newX));
-        
-            yAxisGroup.transition()
-                .duration(500)
-                .call(d3.axisLeft(newY));
-            // Update the paths
-            paths.attr("d", d => {
-                return d3.line()
-                    .curve(d3.curveBasis)
-                    .x(d => newX(d[0]))
-                    .y(d => newY(d[1]))(d.density);
-            });
-        }
-
-        // Add CSS for tooltip
-        d3.select("head").append("style").text(`
-            .tooltip {
-                position: absolute;
-                text-align: center;
-                width: auto;
-                height: auto;
-                padding: 5px;
-                font: 12px sans-serif;
-                background: lightsteelblue;
-                border: 0px;
-                border-radius: 8px;
-                pointer-events: none;
-            }
-        `);
+       
     };  
 
 

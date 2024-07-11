@@ -89,7 +89,7 @@ function ScatterPlot(props) {
                     .style("top", (event.pageY - 28) + "px");
             })
             // Tooltip mouseout event handling
-            .on("mouseout", function(d) {
+            .on("mouseout", function(event, d) {
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
