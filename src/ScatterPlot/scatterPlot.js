@@ -84,20 +84,22 @@ function ScatterPlot(props) {
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-            
-            const dots = chartGroup.selectAll(".dot")
+
+        let dots = null
+        if(props.zoom){
+            dots = chartGroup.selectAll(".dot")
             .data(points)
             .enter().append("circle")
             .attr("class", "dot")
             .attr("cx", d => x(d.x))
-            .attr("cy", height) // Start the dots at the bottom of the chart
+            .attr("cy", d => y(d.y))
             .attr("r", 5)
-            .style("fill", "#4285F4")
-            .on("click", (event, d) => {
+            .on("click",(event,d) => {
                 tooltip.transition()
                     .style("opacity", 0);
-                scatterClickHandler(event, d, datasetX, datasetY);
+                scatterClickHandler(event,d,datasetX,datasetY)
             })
+            .style("fill", "#4285F4")
             .on("mouseover", function(event, d) {
                 tooltip.transition()
                     .duration(200)
@@ -106,19 +108,55 @@ function ScatterPlot(props) {
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
+            // Tooltip mouseout event handling
             .on("mouseout", function(event, d) {
-                const tools = document.getElementsByClassName("tooltip");
+                const tools = document.getElementsByClassName("tooltip")
                 Object.keys(tools).forEach(key => {
-                    tools[key].style.opacity = 0;
+                    tools[key].style.opacity = 0
+                });
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+        }else{
+            dots = chartGroup.selectAll(".dot")
+            .data(points)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", d => x(d.x))
+            .attr("cy", height)
+            .attr("r", 5)
+            .on("click",(event,d) => {
+                tooltip.transition()
+                    .style("opacity", 0);
+                scatterClickHandler(event,d,datasetX,datasetY)
+            })
+            .style("fill", "#4285F4")
+            .on("mouseover", function(event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`(${d.x}, ${d.y})`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            // Tooltip mouseout event handling
+            .on("mouseout", function(event, d) {
+                const tools = document.getElementsByClassName("tooltip")
+                Object.keys(tools).forEach(key => {
+                    tools[key].style.opacity = 0
                 });
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
             })
-            .transition() // Add a transition for the initial placement
+            .transition()
             .duration(1000)
-            .attr("cy", d => y(d.y)); // Move the dots to their correct positions
+            .attr("cy", d => y(d.y));
+        }
         
+        
+
         
         // CSS for tooltip
         d3.select("head").append("style").text(`
@@ -167,35 +205,36 @@ function ScatterPlot(props) {
             .style("font-weight", "bold")
             .style("fill", "black")
             .text(datasetY.col_name);
-        
 
-        // Define the zoom behavior
-        const zoom = d3.zoom()
+        if(props.zoom){
+            // Define the zoom behavior
+            const zoom = d3.zoom()
             .scaleExtent([1, 100])  // Set the zoom scale extent
             .extent([[margin.left, margin.top], [width + margin.left, height + margin.top]])
             .on("zoom", zoomed);
-        
-        // Attach the zoom behavior to the SVG
-        svg.call(zoom);
-        
-        function zoomed(event) {
+
+            // Attach the zoom behavior to the SVG
+            svg.call(zoom);
+
+            function zoomed(event) {
             // Create new scales based on the event transform
             const newX = event.transform.rescaleX(x);
             const newY = event.transform.rescaleY(y);
-        
+
             // Update the axes
             xAxisGroup.call(xAxis.scale(newX));
             yAxisGroup.call(yAxis.scale(newY));
-        
+
             // Update the dots
             dots.attr("cx", d => newX(d.x))
                 .attr("cy", d => newY(d.y));
-        
+
             // Update the labels (if using)
             labels.attr("x", d => newX(d.x))
                 .attr("y", d => newY(d.y) - 10);
+            }
         }
-
+        
         colNameX.current = datasetX?.col_name
         colNameY.current = datasetY?.col_name
 

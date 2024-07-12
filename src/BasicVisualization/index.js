@@ -41,6 +41,7 @@ function Visualization(props) {
                 setXVariable={setXVariable}
                 setYVariable={setYVariable}
                 clickHandler={clickHandler}
+                zoom={false}
             /> : null}
             {props.data.length ? <Radar isMobileView={props.isMobileView} data={props.data} colOfInterest={colOfInterest} selectedPoints={selectedPoints} filterOptions={filterOptions}/> : null}
         

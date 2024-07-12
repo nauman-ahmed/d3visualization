@@ -98,6 +98,7 @@ function Scatter(props) {
                         clickHandler={props.clickHandler}
                         duration={2000}
                         isMobileView={props.isMobileView}
+                        zoom={props.zoom}
                     />
                     :
                     null

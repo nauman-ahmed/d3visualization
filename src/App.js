@@ -137,7 +137,7 @@ function App() {
                 {data.length && activeTab == "3" &&  <Density data={data} variable={variable}/>}
                 {data.length && activeTab == "3" &&  <Radar data={data} selectedVariable={selectedVariable}/>}
                 {data.length && activeTab == "3" &&  <MultiBar data={data} variable={variable} />}
-                {data.length && activeTab == "3" &&  <Scatter data={data} variable={variable}/>} 
+                {data.length && activeTab == "3" &&  <Scatter data={data} variable={variable} zoom={true}/>} 
               </div>
             </Col>
           </Row>
