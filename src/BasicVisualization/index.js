@@ -41,9 +41,17 @@ function Visualization(props) {
                 setXVariable={setXVariable}
                 setYVariable={setYVariable}
                 clickHandler={clickHandler}
+                selectedPoints={selectedPoints} 
                 zoom={false}
             /> : null}
-            {props.data.length ? <Radar isMobileView={props.isMobileView} data={props.data} colOfInterest={colOfInterest} selectedPoints={selectedPoints} filterOptions={filterOptions}/> : null}
+            {props.data.length ? <Radar 
+                isMobileView={props.isMobileView} 
+                data={props.data}
+                colOfInterest={colOfInterest} 
+                selectedPoints={selectedPoints} 
+                filterOptions={filterOptions}
+                dimension = {{width: 200, height: 200}}
+            /> : null}
         
         </div>
     );

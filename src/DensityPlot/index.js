@@ -4,7 +4,7 @@ import "./density.css"
 import DensityPlot from "./densityPlot";
 
 function Density(props) {
-   
+    
     const [selected,setSelected] = useState('N_Days')
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['N_Days', 'Age', 'Bilirubin', 'Cholesterol', 'Albumin', 
@@ -28,24 +28,6 @@ function Density(props) {
                 }
             }
         })
-
-        // stage_1.forEach((element, index) => {
-        //     if (element === null || element === undefined || typeof element === "boolean") {
-        //       console.log(`Element at index ${index} is ${element}`);
-        //     }
-        // })
-        
-        // stage_2.forEach((element, index) => {
-        //     if (element === null || element === undefined || typeof element === "boolean") {
-        //         console.log(`Element at index ${index} is ${element}`);
-        //     }
-        // })
-
-        // stage_3.forEach((element, index) => {
-        //         if (element === null || element === undefined || typeof element === "boolean") {
-        //             console.log(`Element at index ${index} is ${element}`);
-        //         }
-        //     })
 
         let maxNumberDataset = [...stage_1,...stage_2,...stage_3]
         let maxNumber = Math.ceil(Math.max(...maxNumberDataset));
@@ -78,7 +60,7 @@ function Density(props) {
 
     return (
         <div className="col-sm-12 col-lg-6 ">
-            <div className="mt-5 mb-5">
+            <div className="mt-3 mb-2 d-flex justify-content-center">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selected}

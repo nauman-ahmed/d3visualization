@@ -43,7 +43,7 @@ function DensityPlot(props) {
     }
 
     const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"] ) => {
-        const width = 400, height = 200, margin = { top: 40, right: 200, bottom: 70, left: 40 };
+        const width = 400, height = 300, margin = { top: 40, right: 0, bottom: 70, left: 40 };
 
         const svg = d3.select(id).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -284,7 +284,7 @@ function DensityPlot(props) {
     }, [props.dataset]);
 
   return <>
-        <div className="col-12 p-4" id={"densityPlot0"}></div>
+        <div className="col-lg-12 d-flex justify-content-center" id={"densityPlot0"}></div>
      </>;
 }
 

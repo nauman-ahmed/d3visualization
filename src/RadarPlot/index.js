@@ -111,6 +111,7 @@ function Radar(props) {
                         selectedVariable={props.selectedVariable} 
                         selectedPoints={props.selectedPoints}
                         filterOptions={props.filterOptions}
+                        dimension = {props.dimension}
                     />
                     :
                     null

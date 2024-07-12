@@ -50,7 +50,7 @@ function Scatter(props) {
 
     return (
         <div className="col-sm-12 col-lg-6 ">
-            <div className="mt-5 mb-5 row ">
+            <div className="mt-3 row d-flex justify-content-center">
                 <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {"X-Axis = "} {selectedX}
@@ -96,6 +96,7 @@ function Scatter(props) {
                         datasetX={keyDatasets.filter((dataset) => dataset.col_name == selectedX)} 
                         datasetY={keyDatasets.filter((dataset) => dataset.col_name == selectedY)} 
                         clickHandler={props.clickHandler}
+                        selectedPoints={props.selectedPoints} 
                         duration={2000}
                         isMobileView={props.isMobileView}
                         zoom={props.zoom}

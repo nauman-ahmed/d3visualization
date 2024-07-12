@@ -53,7 +53,7 @@ function Density(props) {
 
     return (
         <div className="col-sm-12 col-lg-6 ">
-            <div className="mt-5 mb-5">
+            <div className="mt-3 d-flex justify-content-center">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {selected}

@@ -29,10 +29,10 @@ function MultiBarChartPlot(props) {
     const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"],animation = 0 ) => {
         const data = dataset.datasets;
 
-        const svgWidth = 500;
-        const svgHeight = 300;
+        const svgWidth = 400;
+        const svgHeight = 400;
         
-        const margin = { top: 40, right: 200, bottom: 70, left: 40 };
+        const margin = { top: 40, right: 0, bottom: 40, left: 40 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
         
@@ -131,7 +131,7 @@ function MultiBarChartPlot(props) {
         
         svg.append("text")
             .attr("x", width / 2)
-            .attr("y", height + 50)
+            .attr("y", height + 30)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .style("font-family", "Arial, sans-serif")
@@ -208,7 +208,7 @@ function MultiBarChartPlot(props) {
     }, [props.dataset]);
 
   return <>
-        <div className="col-12 p-4" id={"multiBarChart0"}></div>
+        <div className="col-lg-12 d-flex justify-content-center" id={"multiBarChart0"}></div>
      </>;
 }
 

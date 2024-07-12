@@ -64,9 +64,9 @@ function RadarPlot(props) {
         }
 
 
-        const width = 300,
-                height = 300,
-                margin = { top: 100, right: 160, bottom: 100, left: 160 },
+        const width = props.dimension ? props.dimension.width : 300,
+                height = props.dimension ? props.dimension.height : 300,
+                margin = { top: 100, right: 60, bottom: 100, left: 60 },
                 radius = Math.min(width, height) / 2,
                 levels = 5; // Number of concentric circles
         const numTicks = 5; // Number of ticks per axis
@@ -180,22 +180,40 @@ function RadarPlot(props) {
             .on("click",(d, i) => props.selectedVariable ? props.selectedVariable(d, i) : null);
 
         if(props.selectedPoints){
-            const yCoordinates = [-150, -130, -110, -90, -70, -50]
+            const yCoordinates = [ -((width/2)-0), -((width/2)-100), -((width/2)-200), -((width/2)-300)]
 
             for (let index = 0; index < props.selectedPoints.length; index++) {
-                svg.append("circle").attr("cx", 200).attr("cy", yCoordinates[index]).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                svg.append("text").attr("x", 210).attr("y", yCoordinates[index]).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                if(index == 0){
+                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                }
+                else if(index == 1){
+                    svg.append("circle").attr("cx",-((width/2) - 200)).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                    svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                }
+                else if(index == 2){
+                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                }
+                else if(index == 3){
+                    svg.append("circle").attr("cx", -((width/2) - 200)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                    svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                }
+                else if(index == 4){
+                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+80)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+80)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                }
             }
         }else{
             // Handmade legend
-            const circle1 = svg.append("circle").attr("cx", 200).attr("cy", -150).attr("r", 6).style("fill", "#4285F4").style("opacity", 0).on("click", () => onCircleClick(1));
-            const circle2 = svg.append("circle").attr("cx", 200).attr("cy", -130).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
-            const circle3 = svg.append("circle").attr("cx", 200).attr("cy", -110).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
-            const circle4 = svg.append("circle").attr("cx", 200).attr("cy", -90).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
-            const text1 = svg.append("text").attr("x", 210).attr("y", -150).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text2 = svg.append("text").attr("x", 210).attr("y", -130).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text3 = svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text4 = svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const circle1 = svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#4285F4").style("opacity", 0).on("click", () => onCircleClick(1));
+            const circle2 = svg.append("circle").attr("cx", -((width/2)-100)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
+            const circle3 = svg.append("circle").attr("cx", -((width/2)-200)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
+            const circle4 = svg.append("circle").attr("cx", -((width/2)-300)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+            const text1 = svg.append("text").attr("x", -((width/2)-10)).attr("y", -((height/2)+50)).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text2 = svg.append("text").attr("x", -((width/2)-110)).attr("y", -((height/2)+50)).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text3 = svg.append("text").attr("x", -((width/2)-210)).attr("y", -((height/2)+50)).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text4 = svg.append("text").attr("x", -((width/2)-310)).attr("y", -((height/2)+50)).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
             circle1.style("opacity", 1);
             circle2.style("opacity", 1);
@@ -228,7 +246,7 @@ function RadarPlot(props) {
     }, [props.dataset,colors]);
 
   return <>
-        <div className="col-12 p-4" id={"radar0"}></div>
+        <div className="col-lg-12 d-flex justify-content-center" id={"radar0"}></div>
      </>;
 }
 
