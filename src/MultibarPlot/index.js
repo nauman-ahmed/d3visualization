@@ -9,6 +9,7 @@ function Density(props) {
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['Status', 'Drug', 'Sex', 'Ascites', 'Hepatomegaly', 
     'Spiders', 'Edema'])
+    const height = useRef(null)
     
     const prepareData = (data,col) => {
 
@@ -39,7 +40,7 @@ function Density(props) {
             setSelected(props.variable)
         }
     },[props.variable])
-    
+
     useEffect(() => {
         if(props.data.length){
             let keyDatasetsDummy = []
@@ -60,7 +61,7 @@ function Density(props) {
                     <ul class="dropdown-menu">
                         {
                             colOfInterest.map((col) => 
-                                <li><a class="dropdown-item" onClick={() => setSelected(col)} href="#">{col}</a></li>
+                                <li><a class="dropdown-item" onClick={() => {setSelected(col); }}>{col}</a></li>
                             )
 
                         }

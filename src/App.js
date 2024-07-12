@@ -89,7 +89,6 @@ function App() {
 
   return (
     <div>
-      {console.log("INNER WIDTH",isMobileView)}
       <Nav tabs className="row">
         <NavItem className="col-lg-4 mt-2 col-sm-12">
           <NavLink
@@ -138,7 +137,7 @@ function App() {
                 {data.length && activeTab == "3" &&  <Density data={data} variable={variable}/>}
                 {data.length && activeTab == "3" &&  <Radar data={data} selectedVariable={selectedVariable}/>}
                 {data.length && activeTab == "3" &&  <MultiBar data={data} variable={variable} />}
-                {data.length && activeTab == "3" &&  <Scatter data={data} />} 
+                {data.length && activeTab == "3" &&  <Scatter data={data} variable={variable}/>} 
               </div>
             </Col>
           </Row>

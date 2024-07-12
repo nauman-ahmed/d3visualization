@@ -4,16 +4,19 @@ import "./scatter.css"
 import { svg } from "d3";
 
 function ScatterPlot(props) {
+    const colNameX = useRef(props.datasetX[0]?.col_name)
+    const colNameY = useRef(props.datasetY[0]?.col_name)
+    const height = useRef(null)
 
     const scatterClickHandler = (event,d,datasetX,datasetY) => {
         if(props.clickHandler){
             
-            props.clickHandler(event,d,datasetX.col_name,datasetY.col_name)
+            props.clickHandler(event,d,datasetX?.col_name,datasetY?.col_name)
         }
     }
 
     const createPlot = (datasetX, datasetY, id, duration= 4000) => {
-        console.log("isMobileView",props.isMobileView)
+
         const data = [
             { x: datasetX.datasets, y: datasetY.datasets }
         ];
@@ -62,13 +65,21 @@ function ScatterPlot(props) {
         
         const xAxisGroup = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top + height})`);
-    
-        xAxisGroup.transition().duration(duration).call(xAxis);
+        if(colNameX.current !== datasetX?.col_name || colNameY.current !== datasetY?.col_name){
+            xAxisGroup.transition().duration(duration).call(xAxis);
+        }else{
+            xAxisGroup.call(xAxis);
+        }
         
         const yAxisGroup = svg.append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
         
-        yAxisGroup.transition().duration(duration).call(yAxis);
+        if(colNameX.current !== datasetX?.col_name || colNameY.current !== datasetY?.col_name){
+            yAxisGroup.transition().duration(duration).call(yAxis);
+        }else{
+            yAxisGroup.call(yAxis);
+        }
+
         // Define the tooltip
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -100,7 +111,6 @@ function ScatterPlot(props) {
                 const tools = document.getElementsByClassName("tooltip")
                 Object.keys(tools).forEach(key => {
                     tools[key].style.opacity = 0
-                    console.log(`Key: ${key}, Value: ${tools[key].style.opacity}`);
                 });
                 tooltip.transition()
                     .duration(500)
@@ -136,7 +146,7 @@ function ScatterPlot(props) {
         
         svg.append("text")
             .attr("x", (width / 2) + margin.left)
-            .attr("y", height + 70)
+            .attr("y", height + 60)
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .style("font-family", "Arial, sans-serif")
@@ -182,6 +192,9 @@ function ScatterPlot(props) {
             labels.attr("x", d => newX(d.x))
                 .attr("y", d => newY(d.y) - 10);
         }
+
+        colNameX.current = datasetX?.col_name
+        colNameY.current = datasetY?.col_name
 
     }
 

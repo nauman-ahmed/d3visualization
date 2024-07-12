@@ -197,15 +197,15 @@ function RadarPlot(props) {
             const text3 = svg.append("text").attr("x", 210).attr("y", -110).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
             const text4 = svg.append("text").attr("x", 210).attr("y", -90).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
-            circle1.transition().duration(4000).style("opacity", 1);
-            circle2.transition().duration(4200).style("opacity", 1);
-            circle3.transition().duration(4400).style("opacity", 1);
-            circle4.transition().duration(4600).style("opacity", 1);
+            circle1.style("opacity", 1);
+            circle2.style("opacity", 1);
+            circle3.style("opacity", 1);
+            circle4.style("opacity", 1);
 
-            text1.transition().duration(4000).style("opacity", 1);
-            text2.transition().duration(4200).style("opacity", 1);
-            text3.transition().duration(4400).style("opacity", 1);
-            text4.transition().duration(4600).style("opacity", 1);
+            text1.style("opacity", 1);
+            text2.style("opacity", 1);
+            text3.style("opacity", 1);
+            text4.style("opacity", 1);
             
         }
 

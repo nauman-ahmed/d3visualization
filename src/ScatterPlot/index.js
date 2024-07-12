@@ -4,7 +4,7 @@ import "./scatter.css"
 import ScatterPlot from "./scatterPlot";
 
 function Scatter(props) {
-   
+    
     const [selectedX,setSelectedX] = useState('N_Days')
     const [selectedY,setSelectedY] = useState('Age')
     const [keyDatasets,setKeyDatasets] = useState([])
@@ -28,6 +28,12 @@ function Scatter(props) {
     }
 
     useEffect(() => {
+        if(colOfInterest.includes(props.variable)){
+            setSelectedX(props.variable)
+        }
+    },[props.variable])
+
+    useEffect(() => {
         if(props.data.length){
             if(props.colOfInterest){
                 setColOfInterest(props.colOfInterest)
@@ -47,13 +53,18 @@ function Scatter(props) {
             <div className="mt-5 mb-5 row ">
                 <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {selectedX}
+                        {"X-Axis = "} {selectedX}
                     </button>
                     {/* <span className="mx-2">X Axis</span> */}
                     <ul class="dropdown-menu">
                         {
                             colOfInterest.map((col) => 
-                                <li><a class="dropdown-item" onClick={() => setSelectedX(col)} href="#">{col}</a></li>
+                                <li><a class="dropdown-item" onClick={() => {
+                                    if(props.setXVariable){
+                                        props.setXVariable(col)
+                                    }
+                                    setSelectedX(col); 
+                                }}>{col}</a></li>
                             )
 
                         }
@@ -61,13 +72,18 @@ function Scatter(props) {
                 </div>
                 <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {selectedY}
+                        {"Y-Axis =  "} {selectedY}
                     </button>
                     {/* <span className="mx-2">Y Axis</span> */}
                     <ul class="dropdown-menu">
                         {
                             colOfInterest.map((col) => 
-                                <li><a class="dropdown-item" onClick={() => setSelectedY(col)} href="#">{col}</a></li>
+                                <li><a class="dropdown-item" onClick={() => {
+                                    if(props.setYVariable){
+                                        props.setYVariable(col)
+                                    }
+                                    setSelectedY(col); 
+                                }}>{col}</a></li>
                             )
 
                         }
@@ -80,7 +96,7 @@ function Scatter(props) {
                         datasetX={keyDatasets.filter((dataset) => dataset.col_name == selectedX)} 
                         datasetY={keyDatasets.filter((dataset) => dataset.col_name == selectedY)} 
                         clickHandler={props.clickHandler}
-                        duration={1000}
+                        duration={2000}
                         isMobileView={props.isMobileView}
                     />
                     :

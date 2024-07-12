@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3";
 import "./density.css"
 
-function DensityPlot(props) {
+function DensityPlot(props) { 
 
-    const [colors, setColors] = useState(["#1f77b4", "#ff7f0e", "#2ca02c"])
+    const colName = useRef(null)
 
     // Kernel Density Estimator functions
     function kernelDensityEstimator(kernel, X) {
@@ -28,11 +28,22 @@ function DensityPlot(props) {
         const colors = ["#1f77b4", "#ff7f0e", "#2ca02c"];
         let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"];
         dummyColors.splice(i - 1, 1, colors[i - 1]);
-        setColors(dummyColors);
+        var container = document.getElementById("densityPlot0");
+        var svgs = container.getElementsByTagName('svg');
+        if(i == 4){
+            createPlot(props.dataset[0],"#"+"densityPlot0",["#1f77b4", "#ff7f0e", "#2ca02c"])
+        }else{
+            createPlot(props.dataset[0],"#"+"densityPlot0",dummyColors)
+        }
+        for (let index = 0; index < svgs.length; index++) {
+            if(svgs.length-1 !== index){
+                container.removeChild(svgs[index]); 
+            }
+        }
     }
 
-    const createPlot = (dataset, id) => {
-        const width = 500, height = 300, margin = { top: 40, right: 200, bottom: 70, left: 40 };
+    const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"] ) => {
+        const width = 400, height = 200, margin = { top: 40, right: 200, bottom: 70, left: 40 };
 
         const svg = d3.select(id).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -146,33 +157,66 @@ function DensityPlot(props) {
         const xAxis = svg.append("g")
             .attr("class", "x axis")
             .attr("transform", `translate(0,${height})`);
-        
-        xAxis.transition().duration(1000).call(d3.axisBottom(x));
+
+        if(colName.current !== dataset.col_name){
+            xAxis.transition().duration(1000).call(d3.axisBottom(x));
+        }else{
+            xAxis.call(d3.axisBottom(x));
+        }
+
         // Add the Y Axis
         const yAxis = svg.append("g")
             .attr("class", "y axis");
 
-        yAxis.transition().duration(1000).call(d3.axisLeft(y));
+        if(colName.current !== dataset.col_name){
+            yAxis.transition().duration(1000).call(d3.axisLeft(y));
+        }else{
+            yAxis.call(d3.axisLeft(y));
+        }
     
         // Handmade legend
-        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", 0).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
-        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", 0).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
-        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", 0).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
-        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", 0).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));;
-        const text1 = svg.append("text").attr("x", 60).attr("y", 0).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text2 = svg.append("text").attr("x", 130).attr("y", 0).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text3 = svg.append("text").attr("x", 200).attr("y", 0).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text4 = svg.append("text").attr("x", 270).attr("y", 0).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", -10).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
+        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", -10).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
+        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", -10).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
+        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", -10).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => onCircleClick(4));;
+        const text1 = svg.append("text").attr("x", 60).attr("y", -10).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text2 = svg.append("text").attr("x", 130).attr("y", -10).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text3 = svg.append("text").attr("x", 200).attr("y", -10).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text4 = svg.append("text").attr("x", 270).attr("y", -10).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
-        circle1.transition().duration(300).style("opacity", 1);
-        circle2.transition().duration(600).style("opacity", 1);
-        circle3.transition().duration(700).style("opacity", 1);
-        circle4.transition().duration(800).style("opacity", 1);
-
-        text1.transition().duration(300).style("opacity", 1);
-        text2.transition().duration(600).style("opacity", 1);
-        text3.transition().duration(700).style("opacity", 1);
-        text4.transition().duration(800).style("opacity", 1);
+        if(colName.current !== dataset.col_name){
+            circle1.transition().duration(300).style("opacity", 1);
+            circle2.transition().duration(600).style("opacity", 1);
+            circle3.transition().duration(700).style("opacity", 1);
+            circle4.transition().duration(800).style("opacity", 1);
+    
+            text1.transition().duration(300).style("opacity", 1);
+            text2.transition().duration(600).style("opacity", 1);
+            text3.transition().duration(700).style("opacity", 1);
+            text4.transition().duration(800).style("opacity", 1);
+    
+        }else{
+            circle1.style("opacity", 1);
+            circle2.style("opacity", 1);
+            circle3.style("opacity", 1);
+            circle4.style("opacity", 1);
+    
+            text1.style("opacity", 1);
+            text2.style("opacity", 1);
+            text3.style("opacity", 1);
+            text4.style("opacity", 1);
+    
+        }
+        
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + 50)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-family", "Arial, sans-serif")
+            .style("font-weight", "bold")
+            .style("fill", "black")
+            .text(dataset.col_name);
 
         // Add zoom functionality
         const zoom = d3.zoom()
@@ -223,24 +267,21 @@ function DensityPlot(props) {
                         .style("top", (event.pageY - 28) + "px");
                 });
         }
-       
+        colName.current = dataset.col_name
     };  
 
-
     useEffect(() => {
-        if(props.dataset.length){
+        if(colName.current !== props.dataset[0].col_name){
             var container = document.getElementById("densityPlot0");
             var svgs = container.getElementsByTagName('svg');
-            
-            createPlot(props.dataset[0],"#"+"densityPlot0")
-
+            createPlot(props.dataset[0],"#"+"densityPlot0",["#1f77b4", "#ff7f0e", "#2ca02c"])
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){
                     container.removeChild(svgs[index]); 
                 }
             }
         }
-    }, [props.dataset,colors]);
+    }, [props.dataset]);
 
   return <>
         <div className="col-12 p-4" id={"densityPlot0"}></div>

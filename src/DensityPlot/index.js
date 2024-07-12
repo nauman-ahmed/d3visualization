@@ -29,23 +29,23 @@ function Density(props) {
             }
         })
 
-        stage_1.forEach((element, index) => {
-            if (element === null || element === undefined || typeof element === "boolean") {
-              console.log(`Element at index ${index} is ${element}`);
-            }
-        })
+        // stage_1.forEach((element, index) => {
+        //     if (element === null || element === undefined || typeof element === "boolean") {
+        //       console.log(`Element at index ${index} is ${element}`);
+        //     }
+        // })
         
-        stage_2.forEach((element, index) => {
-            if (element === null || element === undefined || typeof element === "boolean") {
-                console.log(`Element at index ${index} is ${element}`);
-            }
-        })
+        // stage_2.forEach((element, index) => {
+        //     if (element === null || element === undefined || typeof element === "boolean") {
+        //         console.log(`Element at index ${index} is ${element}`);
+        //     }
+        // })
 
-        stage_3.forEach((element, index) => {
-                if (element === null || element === undefined || typeof element === "boolean") {
-                    console.log(`Element at index ${index} is ${element}`);
-                }
-            })
+        // stage_3.forEach((element, index) => {
+        //         if (element === null || element === undefined || typeof element === "boolean") {
+        //             console.log(`Element at index ${index} is ${element}`);
+        //         }
+        //     })
 
         let maxNumberDataset = [...stage_1,...stage_2,...stage_3]
         let maxNumber = Math.ceil(Math.max(...maxNumberDataset));

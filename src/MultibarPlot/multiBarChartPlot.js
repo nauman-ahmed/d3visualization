@@ -5,17 +5,28 @@ import { svg } from "d3";
 
 function MultiBarChartPlot(props) {
 
-    const [colors, setColors] = useState(["#1f77b4", "#ff7f0e", "#2ca02c"])
-    
+    const colName = useRef(null)
+
     // Define the action to take on click
     function onCircleClick(i) {
-        const colors = ["#1f77b4", "#ff7f0e", "#2ca02c"]
-        let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"]
-        dummyColors.splice(i-1,1,colors[i-1])
-        setColors(dummyColors)
+        const colors = ["#1f77b4", "#ff7f0e", "#2ca02c"];
+        let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"];
+        dummyColors.splice(i - 1, 1, colors[i - 1]);
+        var container = document.getElementById("multiBarChart0");
+        var svgs = container.getElementsByTagName('svg');
+        if(i == 4){
+            createPlot(props.dataset[0],"#"+"multiBarChart0",["#1f77b4", "#ff7f0e", "#2ca02c"])
+        }else{
+            createPlot(props.dataset[0],"#"+"multiBarChart0",dummyColors)
+        }
+        for (let index = 0; index < svgs.length; index++) {
+            if(svgs.length-1 !== index){
+                container.removeChild(svgs[index]); 
+            }
+        }
     }
 
-    const createPlot = (dataset, id) => {
+    const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"]) => {
         const data = dataset.datasets;
 
         const svgWidth = 500;
@@ -90,17 +101,28 @@ function MultiBarChartPlot(props) {
                     .style("opacity", 0);
             });
         
-        // Append Axes
-        svg.append("g")
+        if(colName.current !== dataset.col_name){
+            svg.append("g")
             .attr("class", "x axis")
             .attr("transform", `translate(0, ${height})`)
             .transition().duration(1000)
             .call(xAxis);
-        
-        svg.append("g")
+
+            svg.append("g")
             .attr("class", "y axis")
             .transition().duration(1000)
             .call(yAxis);
+
+        }else{
+            svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", `translate(0, ${height})`)
+            .call(xAxis);
+
+            svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+        }
         
         svg.append("text")
             .attr("x", width / 2)
@@ -113,24 +135,36 @@ function MultiBarChartPlot(props) {
             .text(dataset.col_name);
         
         // Handmade legend
-        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", 0).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
-        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", 0).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
-        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", 0).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
-        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", 0).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#1f77b4", "#ff7f0e", "#2ca02c"]));;
-        const text1 = svg.append("text").attr("x", 60).attr("y", 0).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text2 = svg.append("text").attr("x", 130).attr("y", 0).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text3 = svg.append("text").attr("x", 200).attr("y", 0).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text4 = svg.append("text").attr("x", 270).attr("y", 0).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", -10).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
+        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", -10).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
+        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", -10).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
+        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", -10).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => onCircleClick(4));;
+        const text1 = svg.append("text").attr("x", 60).attr("y", -10).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text2 = svg.append("text").attr("x", 130).attr("y", -10).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text3 = svg.append("text").attr("x", 200).attr("y", -10).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text4 = svg.append("text").attr("x", 270).attr("y", -10).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
-        circle1.transition().duration(300).style("opacity", 1);
-        circle2.transition().duration(600).style("opacity", 1);
-        circle3.transition().duration(700).style("opacity", 1);
-        circle4.transition().duration(800).style("opacity", 1);
-
-        text1.transition().duration(300).style("opacity", 1);
-        text2.transition().duration(600).style("opacity", 1);
-        text3.transition().duration(700).style("opacity", 1);
-        text4.transition().duration(800).style("opacity", 1);
+        if(colName.current !== dataset.col_name){
+            circle1.transition().duration(300).style("opacity", 1);
+            circle2.transition().duration(600).style("opacity", 1);
+            circle3.transition().duration(700).style("opacity", 1);
+            circle4.transition().duration(800).style("opacity", 1);
+    
+            text1.transition().duration(300).style("opacity", 1);
+            text2.transition().duration(600).style("opacity", 1);
+            text3.transition().duration(700).style("opacity", 1);
+            text4.transition().duration(800).style("opacity", 1);
+        }else{
+            circle1.style("opacity", 1);
+            circle2.style("opacity", 1);
+            circle3.style("opacity", 1);
+            circle4.style("opacity", 1);
+    
+            text1.style("opacity", 1);
+            text2.style("opacity", 1);
+            text3.style("opacity", 1);
+            text4.style("opacity", 1);
+        }
         
         // Add CSS for tooltip
         d3.select("head").append("style").text(`
@@ -148,16 +182,17 @@ function MultiBarChartPlot(props) {
                 cursor: pointer;
             }
         `);
-
+        
+        colName.current = dataset.col_name
 
     }
 
     useEffect(() => {
-        if(props.dataset.length){
+        if(colName.current !== props.dataset[0].col_name){
             var container = document.getElementById("multiBarChart0");
             var svgs = container.getElementsByTagName('svg');
+            createPlot(props.dataset[0],"#"+"multiBarChart0", ["#1f77b4", "#ff7f0e", "#2ca02c"])
             
-            createPlot(props.dataset[0],"#"+"multiBarChart0")
 
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){
@@ -165,7 +200,7 @@ function MultiBarChartPlot(props) {
                 }
             }
         }
-    }, [props.dataset,colors]);
+    }, [props.dataset]);
 
   return <>
         <div className="col-12 p-4" id={"multiBarChart0"}></div>
