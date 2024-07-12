@@ -70,7 +70,7 @@ function Density(props) {
             </div>
             <div className="row" >
                 { keyDatasets.length ?
-                    <MultiBarChartPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} />
+                    <MultiBarChartPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} isMobileView={props.isMobileView}/>
                     :
                     null
                 }

@@ -64,9 +64,9 @@ function RadarPlot(props) {
         }
 
 
-        const width = props.dimension ? props.dimension.width : 300,
-                height = props.dimension ? props.dimension.height : 300,
-                margin = { top: 100, right: 60, bottom: 100, left: 60 },
+        const width = props.isMobileView ? 250 : 250,
+                height = props.isMobileView ? 250 : 250,
+                margin = props.selectedPoints && props.isMobileView ? { top: 100, right: 60, bottom: 180, left: 60 } : { top: 100, right: 60, bottom: 100, left: 60 },
                 radius = Math.min(width, height) / 2,
                 levels = 5; // Number of concentric circles
         const numTicks = 5; // Number of ticks per axis
@@ -180,40 +180,62 @@ function RadarPlot(props) {
             .on("click",(d, i) => props.selectedVariable ? props.selectedVariable(d, i) : null);
 
         if(props.selectedPoints){
-            const yCoordinates = [ -((width/2)-0), -((width/2)-100), -((width/2)-200), -((width/2)-300)]
 
             for (let index = 0; index < props.selectedPoints.length; index++) {
-                if(index == 0){
-                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
-                }
-                else if(index == 1){
-                    svg.append("circle").attr("cx",-((width/2) - 200)).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                    svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
-                }
-                else if(index == 2){
-                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
-                }
-                else if(index == 3){
-                    svg.append("circle").attr("cx", -((width/2) - 200)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                    svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
-                }
-                else if(index == 4){
-                    svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+80)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                    svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+80)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                if(props.isMobileView){
+                    if(index == 0){
+                        svg.append("circle").attr("cx", -(width/2) - 0).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -(width/2) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 1){
+                        svg.append("circle").attr("cx",-((width/2) - 0)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2) - 10) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 2){
+                        svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+80)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+80)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 3){
+                        svg.append("circle").attr("cx", -((width/2) - 0)).attr("cy", ((height/2)+100)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2) - 10) + 10).attr("y", ((height/2)+100)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 4){
+                        svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+120)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+120)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                }else{
+                    if(index == 0){
+                        svg.append("circle").attr("cx", -(width/2) - 0).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -(width/2) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 1){
+                        svg.append("circle").attr("cx",-((width/2) - 200)).attr("cy", ((height/2)+40)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+40)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 2){
+                        svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 3){
+                        svg.append("circle").attr("cx", -((width/2) - 200)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2) - 210) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
+                    else if(index == 4){
+                        svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+80)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
+                        svg.append("text").attr("x", -((width/2)-0) + 10).attr("y", ((height/2)+80)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                    }
                 }
             }
         }else{
             // Handmade legend
             const circle1 = svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#4285F4").style("opacity", 0).on("click", () => onCircleClick(1));
-            const circle2 = svg.append("circle").attr("cx", -((width/2)-100)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
-            const circle3 = svg.append("circle").attr("cx", -((width/2)-200)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
-            const circle4 = svg.append("circle").attr("cx", -((width/2)-300)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+            const circle2 = svg.append("circle").attr("cx", -((width/2)-80)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
+            const circle3 = svg.append("circle").attr("cx", -((width/2)-160)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
+            const circle4 = svg.append("circle").attr("cx", -((width/2)-240)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
             const text1 = svg.append("text").attr("x", -((width/2)-10)).attr("y", -((height/2)+50)).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text2 = svg.append("text").attr("x", -((width/2)-110)).attr("y", -((height/2)+50)).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text3 = svg.append("text").attr("x", -((width/2)-210)).attr("y", -((height/2)+50)).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-            const text4 = svg.append("text").attr("x", -((width/2)-310)).attr("y", -((height/2)+50)).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text2 = svg.append("text").attr("x", -((width/2)-90)).attr("y", -((height/2)+50)).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text3 = svg.append("text").attr("x", -((width/2)-170)).attr("y", -((height/2)+50)).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+            const text4 = svg.append("text").attr("x", -((width/2)-250)).attr("y", -((height/2)+50)).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
             circle1.style("opacity", 1);
             circle2.style("opacity", 1);

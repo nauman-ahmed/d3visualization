@@ -28,8 +28,8 @@ function ScatterPlot(props) {
             return acc;
         }, []);
         
-        const svgWidth = 500;
-        const svgHeight = 400;
+        const svgWidth = props.isMobileView ? 400 : 500;
+        const svgHeight = props.isMobileView ? 300 : 400;
         
         const margin = { top: 20, right: 20, bottom: 50, left: 40 };
         const width = svgWidth - margin.left - margin.right;
@@ -193,9 +193,10 @@ function ScatterPlot(props) {
             .style("font-weight", "bold")
             .style("fill", "black")
             .text(datasetX.col_name);
-        svg.append("text")
+        if(!props.isMobileView){
+            svg.append("text")
             .attr("x", 0)
-            .attr("y", 120)
+            .attr("y", props.isMobileView ? 110 : 120)
             .attr("transform", "rotate(-90," + 20 + "," + (height / 2) + ")")  // Rotate around its current position
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
@@ -203,6 +204,7 @@ function ScatterPlot(props) {
             .style("font-weight", "bold")
             .style("fill", "black")
             .text(datasetY.col_name);
+        }
 
         if(props.zoom){
             // Define the zoom behavior

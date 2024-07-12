@@ -43,7 +43,7 @@ function DensityPlot(props) {
     }
 
     const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"] ) => {
-        const width = 400, height = 300, margin = { top: 40, right: 0, bottom: 70, left: 40 };
+        const width = props.isMobileView ? 280  :  400, height = props.isMobileView ? 200 : 300, margin = { top: 40, right: 0, bottom: 70, left: 40 };
 
         const svg = d3.select(id).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -175,14 +175,14 @@ function DensityPlot(props) {
         }
     
         // Handmade legend
-        const circle1 = svg.append("circle").attr("cx", 50).attr("cy", -10).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
-        const circle2 = svg.append("circle").attr("cx", 120).attr("cy", -10).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
-        const circle3 = svg.append("circle").attr("cx", 190).attr("cy", -10).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
-        const circle4 = svg.append("circle").attr("cx", 260).attr("cy", -10).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => onCircleClick(4));;
-        const text1 = svg.append("text").attr("x", 60).attr("y", -10).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text2 = svg.append("text").attr("x", 130).attr("y", -10).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text3 = svg.append("text").attr("x", 200).attr("y", -10).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
-        const text4 = svg.append("text").attr("x", 270).attr("y", -10).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const circle1 = svg.append("circle").attr("cx", 30).attr("cy", -10).attr("r", 6).style("fill", "#1f77b4").style("opacity", 0).on("click", () => onCircleClick(1));
+        const circle2 = svg.append("circle").attr("cx", 100).attr("cy", -10).attr("r", 6).style("fill", "#ff7f0e").style("opacity", 0).on("click", () => onCircleClick(2));
+        const circle3 = svg.append("circle").attr("cx", 170).attr("cy", -10).attr("r", 6).style("fill", "#2ca02c").style("opacity", 0).on("click", () => onCircleClick(3));
+        const circle4 = svg.append("circle").attr("cx", 240).attr("cy", -10).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => onCircleClick(4));;
+        const text1 = svg.append("text").attr("x", 40).attr("y", -10).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text2 = svg.append("text").attr("x", 110).attr("y", -10).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text3 = svg.append("text").attr("x", 180).attr("y", -10).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
+        const text4 = svg.append("text").attr("x", 250).attr("y", -10).text("Reset").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
 
         if(colName.current !== dataset.col_name){
             circle1.transition().duration(300).style("opacity", 1);

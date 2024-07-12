@@ -50,7 +50,6 @@ function Visualization(props) {
                 colOfInterest={colOfInterest} 
                 selectedPoints={selectedPoints} 
                 filterOptions={filterOptions}
-                dimension = {{width: 200, height: 200}}
             /> : null}
         
         </div>

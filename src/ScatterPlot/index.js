@@ -50,8 +50,8 @@ function Scatter(props) {
 
     return (
         <div className="col-sm-12 col-lg-6 ">
-            <div className="mt-3 row d-flex justify-content-center">
-                <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <div className={props.isMobileView ? "mt-3 d-inline-block" : "mt-3 row d-flex justify-content-center"}>
+                <div class="dropdown col-6" >
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {"X-Axis = "} {selectedX}
                     </button>
@@ -70,7 +70,7 @@ function Scatter(props) {
                         }
                     </ul>
                 </div>
-                <div class="dropdown col-6" style={{ display: "flex", justifyContent: "space-evenly" }}>
+                <div class={props.isMobileView ? "dropdown col-6 mt-1" : "dropdown col-6"} style={{ display: "flex", justifyContent: "space-evenly" }}>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {"Y-Axis =  "} {selectedY}
                     </button>
@@ -100,6 +100,7 @@ function Scatter(props) {
                         duration={2000}
                         isMobileView={props.isMobileView}
                         zoom={props.zoom}
+                        isMobileView={props.isMobileView}
                     />
                     :
                     null

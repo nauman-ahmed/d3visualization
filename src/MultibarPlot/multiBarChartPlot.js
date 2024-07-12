@@ -29,8 +29,8 @@ function MultiBarChartPlot(props) {
     const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"],animation = 0 ) => {
         const data = dataset.datasets;
 
-        const svgWidth = 400;
-        const svgHeight = 400;
+        const svgWidth = props.isMobileView ? 350 : 400;
+        const svgHeight = props.isMobileView ? 350 : 400;
         
         const margin = { top: 40, right: 0, bottom: 40, left: 40 };
         const width = svgWidth - margin.left - margin.right;

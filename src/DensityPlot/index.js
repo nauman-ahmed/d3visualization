@@ -77,7 +77,7 @@ function Density(props) {
             </div>
             <div className="row" >
                 { keyDatasets.length ?
-                    <DensityPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} />
+                    <DensityPlot dataset={keyDatasets.filter((dataset) => dataset.col_name == selected)} isMobileView={props.isMobileView}/>
                     :
                     null
                 }

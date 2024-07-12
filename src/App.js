@@ -134,10 +134,10 @@ function App() {
           <Row>
             <Col sm="12">
               <div className="App row">
-                {data.length && activeTab == "3" &&  <Density data={data} variable={variable}/>}
-                {data.length && activeTab == "3" &&  <Radar data={data} selectedVariable={selectedVariable}/>}
-                {data.length && activeTab == "3" &&  <MultiBar data={data} variable={variable} />}
-                {data.length && activeTab == "3" &&  <Scatter data={data} variable={variable} zoom={true}/>} 
+                {data.length && activeTab == "3" &&  <Density data={data} variable={variable} isMobileView={isMobileView}/>}
+                {data.length && activeTab == "3" &&  <Radar data={data} selectedVariable={selectedVariable} isMobileView={isMobileView}/>}
+                {data.length && activeTab == "3" &&  <MultiBar data={data} variable={variable} isMobileView={isMobileView} />}
+                {data.length && activeTab == "3" &&  <Scatter data={data} variable={variable} zoom={true} isMobileView={isMobileView}/>} 
               </div>
             </Col>
           </Row>
