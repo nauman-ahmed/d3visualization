@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3";
 import "./density.css"
 
-function DensityPlot(props) { 
+function DensityPlot(props) {
 
     const colName = useRef(null)
 

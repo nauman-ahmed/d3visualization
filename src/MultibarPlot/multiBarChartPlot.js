@@ -26,7 +26,7 @@ function MultiBarChartPlot(props) {
         }
     }
 
-    const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"]) => {
+    const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"],animation = 0 ) => {
         const data = dataset.datasets;
 
         const svgWidth = 500;
@@ -67,39 +67,44 @@ function MultiBarChartPlot(props) {
         const yAxis = d3.axisLeft(y);
         
         svg.append("g")
-            .selectAll("g")
-            .data(data)
-            .enter().append("g")
-            .attr("transform", d => `translate(${x0(d.group)},0)`)
-            .selectAll("rect")
-            .data(d => [
-                { key: 'Stage1', value: d.Stage1 },
-                { key: 'Stage2', value: d.Stage2 },
-                { key: 'Stage3', value: d.Stage3 }
-            ])
-            .enter().append("rect")
-            .attr("x", d => x1(d.key))
-            .attr("y", d => y(d.value))
-            .attr("width", x1.bandwidth())
-            .attr("height", d => height - y(d.value))
-            .attr("fill", d => {
-                if (d.key === 'Stage1') return colors[0];
-                else if (d.key === 'Stage2') return colors[1];
-                else return colors[2];
-            })
-            .on("mouseover", function(event, d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(`Category: ${d.key}<br>Value: ${d.value}`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
+    .selectAll("g")
+    .data(data)
+    .enter().append("g")
+    .attr("transform", d => `translate(${x0(d.group)},0)`)
+    .selectAll("rect")
+    .data(d => [
+        { key: 'Stage1', value: d.Stage1 },
+        { key: 'Stage2', value: d.Stage2 },
+        { key: 'Stage3', value: d.Stage3 }
+    ])
+    .enter().append("rect")
+    .attr("x", d => x1(d.key))
+    .attr("y", height)  // Initial y position at the bottom of the chart
+    .attr("width", x1.bandwidth())
+    .attr("height", 0) // Initial height is 0
+    .attr("fill", d => {
+        if (d.key === 'Stage1') return colors[0];
+        else if (d.key === 'Stage2') return colors[1];
+        else return colors[2];
+    })
+    .on("mouseover", function(event, d) {
+        tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+        tooltip.html(`Category: ${d.key}<br>Value: ${d.value}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+    })
+    .on("mouseout", function(d) {
+        tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+    })
+    .transition()  // Add a transition for the bars
+    .duration(animation)
+    .attr("y", d => y(d.value))
+    .attr("height", d => height - y(d.value));
+
         
         if(colName.current !== dataset.col_name){
             svg.append("g")
@@ -191,7 +196,7 @@ function MultiBarChartPlot(props) {
         if(colName.current !== props.dataset[0].col_name){
             var container = document.getElementById("multiBarChart0");
             var svgs = container.getElementsByTagName('svg');
-            createPlot(props.dataset[0],"#"+"multiBarChart0", ["#1f77b4", "#ff7f0e", "#2ca02c"])
+            createPlot(props.dataset[0],"#"+"multiBarChart0", ["#1f77b4", "#ff7f0e", "#2ca02c"],1000)
             
 
             for (let index = 0; index < svgs.length; index++) {
