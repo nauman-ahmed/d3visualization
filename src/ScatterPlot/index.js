@@ -73,7 +73,7 @@ function Scatter(props) {
                         }
                     </ul>
                 </div>
-                <div class={props.isMobileView ? "dropdown col-6 mt-1" : "dropdown col-6"} style={{ display: "flex", justifyContent: "space-evenly" }}>
+                <div class={props.isMobileView ? "dropdown col-6 mt-1" : "dropdown col-6"} >
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {"Y-Axis =  "} {selectedY}
                     </button>
