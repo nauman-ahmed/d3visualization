@@ -63,6 +63,9 @@ function Scatter(props) {
                                     if(props.setXVariable){
                                         props.setXVariable(col)
                                     }
+                                    if(props?.clickPressed){
+                                        props.clickPressed.current = false;
+                                    }
                                     setSelectedX(col); 
                                 }}>{col}</a></li>
                             )
@@ -83,6 +86,9 @@ function Scatter(props) {
                                         props.setYVariable(col)
                                     }
                                     setSelectedY(col); 
+                                    if(props?.clickPressed){
+                                        props.clickPressed.current = false;
+                                    }
                                 }}>{col}</a></li>
                             )
 
@@ -100,7 +106,7 @@ function Scatter(props) {
                         duration={2000}
                         isMobileView={props.isMobileView}
                         zoom={props.zoom}
-                        isMobileView={props.isMobileView}
+                        clickPressed={props.clickPressed}
                     />
                     :
                     null

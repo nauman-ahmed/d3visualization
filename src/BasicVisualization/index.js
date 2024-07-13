@@ -7,6 +7,7 @@ function Visualization(props) {
     const [selectedPoints, setSelectedPoints] = useState([])
     const [xVariable, setXVariable] = useState("Power (hp)")
     const [yVariable, setYVariable] = useState("Weight (lb)")
+    const clickPressed = useRef(false)
 
     const clickHandler = (event,data,axisX,axisY) => {
         props.data.map(dataPoints => {
@@ -16,6 +17,7 @@ function Visualization(props) {
                     if(!dummy.includes(dataPoints.Name)){
                         dummy.push(dataPoints.Name)
                         setSelectedPoints(dummy)
+                        clickPressed.current = true
                     }
                 }
             }
@@ -26,6 +28,7 @@ function Visualization(props) {
         let dummy = [...selectedPoints]
         dummy = dummy.filter(d => d !== col)
         setSelectedPoints(dummy)
+        clickPressed.current = true
     }
 
     useEffect(() => {},[selectedPoints])
@@ -43,6 +46,7 @@ function Visualization(props) {
                 clickHandler={clickHandler}
                 selectedPoints={selectedPoints} 
                 zoom={false}
+                clickPressed={clickPressed}
             /> : null}
             {props.data.length ? <Radar 
                 isMobileView={props.isMobileView} 

@@ -5,18 +5,16 @@ import "./scatter.css"
 function ScatterPlot(props) {
     const colNameX = useRef(props.datasetX[0]?.col_name)
     const colNameY = useRef(props.datasetY[0]?.col_name)
-    const clickPressed = useRef(false)
     const appeaarance = useRef(1)
 
     const scatterClickHandler = (event,d,datasetX,datasetY) => {
         if(props.clickHandler){
             props.clickHandler(event,d,datasetX?.col_name,datasetY?.col_name)
-            clickPressed.current = true
         }
     }
 
     const createPlot = (datasetX, datasetY, id, duration= 4000) => {
-        console.log("createPlot")
+
         const data = [
             { x: datasetX.datasets, y: datasetY.datasets }
         ];
@@ -119,7 +117,7 @@ function ScatterPlot(props) {
                     .style("opacity", 0);
             });
         }else{
-            if(clickPressed.current){
+            if(props?.clickPressed?.current){
                 dots = chartGroup.selectAll(".dot")
                 .data(points)
                 .enter().append("circle")
@@ -232,7 +230,7 @@ function ScatterPlot(props) {
         if(!props.isMobileView){
             svg.append("text")
             .attr("x", 0)
-            .attr("y", props.isMobileView ? 110 : 120)
+            .attr("y", (height/2)-10)
             .attr("transform", "rotate(-90," + 20 + "," + (height / 2) + ")")  // Rotate around its current position
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
@@ -277,15 +275,12 @@ function ScatterPlot(props) {
     }
 
     useEffect(() => {
-        console.log("useEffect",appeaarance.current)
         if(props.datasetX.length && appeaarance.current < 2){
-            console.log("APPEARANCE",appeaarance.current, clickPressed.current)
             var container = document.getElementById("scatter0");
             var svgs = container.getElementsByTagName('svg');
             
             createPlot(props.datasetX[0], props.datasetY[0],"#"+"scatter0",props.duration)
             appeaarance.current = appeaarance.current + 1
-            clickPressed.current = false
 
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){

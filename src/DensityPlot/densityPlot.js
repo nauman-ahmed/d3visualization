@@ -45,7 +45,7 @@ function DensityPlot(props) {
 
     const createPlot = (dataset, id, colors = ["#1f77b4", "#ff7f0e", "#2ca02c"] ) => {
         const width = props.isMobileView ? 280  :  400, height = props.isMobileView ? 200 : 300, margin = { top: 40, right: 0, bottom: 70, left: 40 };
-        console.log("DATASET",dataset)
+
         const svg = d3.select(id).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
