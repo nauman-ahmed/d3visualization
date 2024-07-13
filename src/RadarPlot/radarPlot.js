@@ -6,14 +6,18 @@ import { svg } from "d3";
 function RadarPlot(props) {
     
     const [colors, setColors] = useState(["#4285F4", "#34A853", "pink","yellow","red"])
-
+    const currentStage = useRef(4)
     // Define the action to take on click
     function onCircleClick(i) {
-        const colors = ["#4285F4", "#34A853", "pink","yellow","red"]
-        let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"]
-        dummyColors.splice(i-1,1,colors[i-1])
-        setColors(dummyColors)
-        // You can expand this function to do more things, like updating other parts of your visualization
+        if(i == 4) {
+            setColors(["#4285F4", "#34A853", "pink"])
+        }else{
+            const colors = ["#4285F4", "#34A853", "pink","yellow","red"]
+            let dummyColors = ["#d3d3d3", "#d3d3d3", "#d3d3d3"]
+            dummyColors.splice(i-1,1,colors[i-1])
+            setColors(dummyColors)
+        }
+        currentStage.current = i
     }
 
 
@@ -146,13 +150,15 @@ function RadarPlot(props) {
                 })
                 .angle((d, i) => i * angleSlice);
             
+            console.log("DATA",index)
             // Append radar area
             svg.append("path")
             .datum(data)
             .attr("d", radarLine)
             .style("stroke", colors[index])
+            .style("stroke-opacity", currentStage.current == index + 1 ? 1 : currentStage.current == 4 ? 1 : 0)
             .style("fill", colors[index])
-            .style("fill-opacity", 0.1);
+            .style("fill-opacity", currentStage.current == index + 1 ?  0.1 : currentStage.current == 4 ?  0.1 : 0);
 
             // Add circles for each vertex
             svg.selectAll(".radarCircle" + index)
@@ -189,7 +195,7 @@ function RadarPlot(props) {
                     }
                     else if(index == 1){
                         svg.append("circle").attr("cx",-((width/2) - 0)).attr("cy", ((height/2)+60)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                        svg.append("text").attr("x", -((width/2) - 10) + 10).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                        svg.append("text").attr("x", -((width/2) - 10)).attr("y", ((height/2)+60)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
                     }
                     else if(index == 2){
                         svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+80)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
@@ -197,7 +203,7 @@ function RadarPlot(props) {
                     }
                     else if(index == 3){
                         svg.append("circle").attr("cx", -((width/2) - 0)).attr("cy", ((height/2)+100)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
-                        svg.append("text").attr("x", -((width/2) - 10) + 10).attr("y", ((height/2)+100)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
+                        svg.append("text").attr("x", -((width/2) - 10)).attr("y", ((height/2)+100)).text(props.selectedPoints[index]).style("font-size", "10px").attr("alignment-baseline", "middle");
                     }
                     else if(index == 4){
                         svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", ((height/2)+120)).attr("r", 6).style("fill", colors[index]).on("click", () => props.filterOptions(props.selectedPoints[index]));
@@ -231,7 +237,7 @@ function RadarPlot(props) {
             const circle1 = svg.append("circle").attr("cx", -((width/2)-0)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#4285F4").style("opacity", 0).on("click", () => onCircleClick(1));
             const circle2 = svg.append("circle").attr("cx", -((width/2)-80)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "#34A853").style("opacity", 0).on("click", () => onCircleClick(2));
             const circle3 = svg.append("circle").attr("cx", -((width/2)-160)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "pink").style("opacity", 0).on("click", () => onCircleClick(3));
-            const circle4 = svg.append("circle").attr("cx", -((width/2)-240)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => setColors(["#4285F4", "#34A853", "pink"]));;
+            const circle4 = svg.append("circle").attr("cx", -((width/2)-240)).attr("cy", -((height/2)+50)).attr("r", 6).style("fill", "red").style("opacity", 0).on("click", () => onCircleClick(4));;
             const text1 = svg.append("text").attr("x", -((width/2)-10)).attr("y", -((height/2)+50)).text("Stage 1").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
             const text2 = svg.append("text").attr("x", -((width/2)-90)).attr("y", -((height/2)+50)).text("Stage 2").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");
             const text3 = svg.append("text").attr("x", -((width/2)-170)).attr("y", -((height/2)+50)).text("Stage 3").style("font-size", "10px").style("opacity", 0).attr("alignment-baseline", "middle");

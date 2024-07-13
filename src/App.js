@@ -68,7 +68,7 @@ function App() {
             // Assume dataArray is your array of 25,000 objects
             let updatedDataArray = result.data.map(person => {
               // Convert the Age from string to integer, then to years, and round it
-              let ageInYears = convertDaysToYears(parseInt(person.Age, 10));
+              let ageInYears = convertDaysToYears(parseFloat(person.Age));
               return {
                   ...person, // Spread operator to copy all original properties
                   Age: ageInYears.toFixed(2) // Update the Age property, rounded to two decimal places

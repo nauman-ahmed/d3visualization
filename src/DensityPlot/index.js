@@ -18,13 +18,13 @@ function Density(props) {
         data.map((data,index) => {
             if(index < 100000) {
                 if(data.Stage == "1"){
-                    stage_1.push(parseInt(data[col], 10))
+                    stage_1.push(parseFloat(data[col]))
                 }
                 else if(data.Stage == "2"){
-                    stage_2.push(parseInt(data[col], 10))
+                    stage_2.push(parseFloat(data[col]))
                 }
                 else if(data.Stage == "3"){
-                    stage_3.push(parseInt(data[col], 10))
+                    stage_3.push(parseFloat(data[col]))
                 }
             }
         })

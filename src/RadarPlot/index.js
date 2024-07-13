@@ -37,7 +37,7 @@ function Radar(props) {
             colOfInterest.map((value) => {
                 let obj1 = {}
                 obj1["axis"] = value
-                let arr = data.map(item => item.Name  == selectedPoints[index] && parseInt(item[value], 10))
+                let arr = data.map(item => item.Name  == selectedPoints[index] && parseFloat(item[value]))
                 let filteredData = arr.filter(Boolean);
                 obj1["value"] = calculateMedian(filteredData); 
                 subData.push(obj1)
@@ -59,7 +59,7 @@ function Radar(props) {
                 colOfInterest.map((value) => {
                     let obj1 = {}
                     obj1["axis"] = value
-                    let arr = data.map(item => item.Stage  == "1" && parseInt(item[value], 10))
+                    let arr = data.map(item => item.Stage  == "1" && parseFloat(item[value]))
                     let filteredData = arr.filter(Boolean);
                     obj1["value"] = calculateMedian(filteredData); 
                     subData1.push(obj1)
@@ -69,7 +69,7 @@ function Radar(props) {
                 colOfInterest.map((value) => {
                     let obj2 = {}
                     obj2["axis"] = value
-                    let arr = data.map(item => item.Stage  == "2" && parseInt(item[value], 10))
+                    let arr = data.map(item => item.Stage  == "2" && parseFloat(item[value]))
                     let filteredData = arr.filter(Boolean);
                     obj2["value"] = calculateMedian(filteredData); 
                     subData2.push(obj2)
@@ -78,7 +78,7 @@ function Radar(props) {
                 colOfInterest.map((value) => {
                     let obj3 = {}
                     obj3["axis"] = value
-                    let arr = data.map(item => item.Stage  == "3" && parseInt(item[value], 10))
+                    let arr = data.map(item => item.Stage  == "3" && parseFloat(item[value]))
                     let filteredData = arr.filter(Boolean);
                     obj3["value"] = calculateMedian(filteredData); 
                     subData3.push(obj3)

@@ -11,7 +11,7 @@ function Visualization(props) {
     const clickHandler = (event,data,axisX,axisY) => {
         props.data.map(dataPoints => {
             if(selectedPoints.length < 5){
-                if(parseInt(dataPoints[axisX]) == data.x && parseInt(dataPoints[axisY]) == data.y){
+                if(parseFloat(dataPoints[axisX]) == data.x && parseFloat(dataPoints[axisY]) == data.y){
                     const dummy = [...selectedPoints]
                     if(!dummy.includes(dataPoints.Name)){
                         dummy.push(dataPoints.Name)
