@@ -5,7 +5,7 @@ import DensityPlot from "./densityPlot";
 
 function Density(props) {
     
-    const [selected,setSelected] = useState('N_Days')
+    const [selected,setSelected] = useState('Tryglicerides')
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['N_Days', 'Age', 'Bilirubin', 'Cholesterol', 'Albumin', 
     'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin'])

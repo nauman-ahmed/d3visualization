@@ -5,8 +5,8 @@ import ScatterPlot from "./scatterPlot";
 
 function Scatter(props) {
     
-    const [selectedX,setSelectedX] = useState('N_Days')
-    const [selectedY,setSelectedY] = useState('Age')
+    const [selectedX,setSelectedX] = useState('Tryglicerides')
+    const [selectedY,setSelectedY] = useState('Albumin')
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['N_Days', 'Age', 'Bilirubin', 'Cholesterol', 'Albumin', 
     'Copper', 'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin'])

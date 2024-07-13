@@ -5,7 +5,7 @@ import MultiBarChartPlot from "./multiBarChartPlot";
 
 function Density(props) {
    
-    const [selected,setSelected] = useState('Status')
+    const [selected,setSelected] = useState('Ascites')
     const [keyDatasets,setKeyDatasets] = useState([])
     const [colOfInterest, setColOfInterest] = useState(['Status', 'Drug', 'Sex', 'Ascites', 'Hepatomegaly', 
     'Spiders', 'Edema'])
