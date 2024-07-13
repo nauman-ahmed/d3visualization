@@ -170,7 +170,7 @@ function RadarPlot(props) {
             .attr("cx", d => rScale(d.normalizedValue) * Math.cos(angleSlice * data.indexOf(d) - Math.PI/2))
             .attr("cy", d => rScale(d.normalizedValue) * Math.sin(angleSlice * data.indexOf(d) - Math.PI/2))
             .style("fill", colors[index])
-            .style("fill-opacity", 0.7);
+            .style("fill-opacity", currentStage.current == index + 1 ?  0.7 : currentStage.current == 4 ?  0.7 : 0);
         });
 
         // Add one label for each angle
