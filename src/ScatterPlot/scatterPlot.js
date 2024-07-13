@@ -5,7 +5,6 @@ import "./scatter.css"
 function ScatterPlot(props) {
     const colNameX = useRef(props.datasetX[0]?.col_name)
     const colNameY = useRef(props.datasetY[0]?.col_name)
-    const appeaarance = useRef(1)
 
     const scatterClickHandler = (event,d,datasetX,datasetY) => {
         if(props.clickHandler){
@@ -275,20 +274,17 @@ function ScatterPlot(props) {
     }
 
     useEffect(() => {
-        if(props.datasetX.length && appeaarance.current < 2){
+        if(props.datasetX.length){
             var container = document.getElementById("scatter0");
             var svgs = container.getElementsByTagName('svg');
             
             createPlot(props.datasetX[0], props.datasetY[0],"#"+"scatter0",props.duration)
-            appeaarance.current = appeaarance.current + 1
 
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){
                     container.removeChild(svgs[index]); 
                 }
             }
-        }else if (appeaarance.current == 2){
-            appeaarance.current = 1
         }
     }, [props.datasetX]);
 

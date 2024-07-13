@@ -8,8 +8,8 @@ Before you begin, ensure you have met the following requirements:
 
     1- Clone the repository: https://github.com/nauman-ahmed/d3visualization.git
     2- cd d3visualization
-    3- Install the dependencies:
-    4- npm install or yarn install
+    3- Install the dependencies: npm install
+    4- npm install or yarn install (to start the project)
 
 
 
