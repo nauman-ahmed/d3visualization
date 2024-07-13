@@ -5,17 +5,18 @@ import "./scatter.css"
 function ScatterPlot(props) {
     const colNameX = useRef(props.datasetX[0]?.col_name)
     const colNameY = useRef(props.datasetY[0]?.col_name)
-    const height = useRef(null)
+    const clickPressed = useRef(false)
+    const appeaarance = useRef(1)
 
     const scatterClickHandler = (event,d,datasetX,datasetY) => {
         if(props.clickHandler){
-            
             props.clickHandler(event,d,datasetX?.col_name,datasetY?.col_name)
+            clickPressed.current = true
         }
     }
 
     const createPlot = (datasetX, datasetY, id, duration= 4000) => {
-
+        console.log("createPlot")
         const data = [
             { x: datasetX.datasets, y: datasetY.datasets }
         ];
@@ -118,40 +119,75 @@ function ScatterPlot(props) {
                     .style("opacity", 0);
             });
         }else{
-            dots = chartGroup.selectAll(".dot")
-            .data(points)
-            .enter().append("circle")
-            .attr("class", "dot")
-            .attr("cx", d => x(d.x))
-            .attr("cy", height)
-            .attr("r", 5)
-            .on("click",(event,d) => {
-                tooltip.transition()
-                    .style("opacity", 0);
-                scatterClickHandler(event,d,datasetX,datasetY)
-            })
-            .style("fill", "#4285F4")
-            .on("mouseover", function(event, d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(`(${d.x}, ${d.y})`)
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            // Tooltip mouseout event handling
-            .on("mouseout", function(event, d) {
-                const tools = document.getElementsByClassName("tooltip")
-                Object.keys(tools).forEach(key => {
-                    tools[key].style.opacity = 0
+            if(clickPressed.current){
+                dots = chartGroup.selectAll(".dot")
+                .data(points)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.x))
+                .attr("cy", d => y(d.y))
+                .attr("r", 5)
+                .on("click",(event,d) => {
+                    tooltip.transition()
+                        .style("opacity", 0);
+                    scatterClickHandler(event,d,datasetX,datasetY)
+                })
+                .style("fill", "#4285F4")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`(${d.x}, ${d.y})`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                // Tooltip mouseout event handling
+                .on("mouseout", function(event, d) {
+                    const tools = document.getElementsByClassName("tooltip")
+                    Object.keys(tools).forEach(key => {
+                        tools[key].style.opacity = 0
+                    });
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
                 });
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            })
-            .transition()
-            .duration(1000)
-            .attr("cy", d => y(d.y));
+            }else{
+                dots = chartGroup.selectAll(".dot")
+                .data(points)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.x))
+                .attr("cy", height)
+                .attr("r", 5)
+                .on("click",(event,d) => {
+                    tooltip.transition()
+                        .style("opacity", 0);
+                    scatterClickHandler(event,d,datasetX,datasetY)
+                })
+                .style("fill", "#4285F4")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`(${d.x}, ${d.y})`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                // Tooltip mouseout event handling
+                .on("mouseout", function(event, d) {
+                    const tools = document.getElementsByClassName("tooltip")
+                    Object.keys(tools).forEach(key => {
+                        tools[key].style.opacity = 0
+                    });
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                })
+                .transition()
+                .duration(1000)
+                .attr("cy", d => y(d.y))
+            }
+            
         }
         
         
@@ -237,21 +273,27 @@ function ScatterPlot(props) {
         
         colNameX.current = datasetX?.col_name
         colNameY.current = datasetY?.col_name
-
+        
     }
 
     useEffect(() => {
-        if(props.datasetX.length){
+        console.log("useEffect",appeaarance.current)
+        if(props.datasetX.length && appeaarance.current < 2){
+            console.log("APPEARANCE",appeaarance.current, clickPressed.current)
             var container = document.getElementById("scatter0");
             var svgs = container.getElementsByTagName('svg');
             
             createPlot(props.datasetX[0], props.datasetY[0],"#"+"scatter0",props.duration)
+            appeaarance.current = appeaarance.current + 1
+            clickPressed.current = false
 
             for (let index = 0; index < svgs.length; index++) {
                 if(svgs.length-1 !== index){
                     container.removeChild(svgs[index]); 
                 }
             }
+        }else if (appeaarance.current == 2){
+            appeaarance.current = 1
         }
     }, [props.datasetX]);
 

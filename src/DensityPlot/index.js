@@ -29,6 +29,10 @@ function Density(props) {
             }
         })
 
+        if(col == "Bilirubin"){
+            console.log("COL", col,stage_1)
+        }
+
         let maxNumberDataset = [...stage_1,...stage_2,...stage_3]
         let maxNumber = Math.ceil(Math.max(...maxNumberDataset));
 

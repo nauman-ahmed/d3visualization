@@ -150,7 +150,6 @@ function RadarPlot(props) {
                 })
                 .angle((d, i) => i * angleSlice);
             
-            console.log("DATA",index)
             // Append radar area
             svg.append("path")
             .datum(data)

@@ -18,9 +18,7 @@ function Scatter(props) {
         data.map((value,index) => {
             subData.push(parseFloat(value[col]))
         })
-        if(col == "Bilirubin"){
-            console.log("Sub Data",subData)
-        }
+        
         let obj = {
             col_name : col,
             datasets :  subData
